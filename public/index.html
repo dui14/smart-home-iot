@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Home Voice Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient"></div>
+    <div class="language-switch" id="language-switch" role="group" aria-label="Language switch">
+      <button id="lang-vi" type="button" class="lang-btn is-active" data-lang="vi-VN">VI</button>
+      <button id="lang-en" type="button" class="lang-btn" data-lang="en-US">EN</button>
+    </div>
+    <main class="app-shell">
+      <header class="app-header">
+        <p class="eyebrow">Smart Home Control Center</p>
+        <h1>Dieu khien nha thong minh theo thoi gian thuc</h1>
+        <p class="subtitle">Dashboard dieu khien den cua, xem nhiet do tu ESP32 va tab AI quan ly lich su hoi thoai lenh.</p>
+      </header>
+
+      <section class="tabs">
+        <button class="tab-btn is-active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="ai">AI Assistant</button>
+      </section>
+
+      <section class="tab-panel is-active" id="tab-dashboard">
+        <div class="dashboard-grid">
+          <article class="card metric-card">
+            <h2>Temperature Index</h2>
+            <p class="metric-value"><span id="temperature-value">--</span><span class="metric-unit"> C</span></p>
+            <p class="metric-value"><span id="humidity-value">--</span><span class="metric-unit"> %</span></p>
+            <p id="sensor-time" class="muted">Dang cho du lieu ESP32</p>
+          </article>
+
+          <article class="card quick-card">
+            <h2>Quick Control</h2>
+            <div class="quick-actions">
+              <button class="btn quick-btn" data-device="light" data-room="living" data-action="on">Bat den phong khach</button>
+              <button class="btn quick-btn btn-ghost" data-device="light" data-room="living" data-action="off">Tat den phong khach</button>
+              <button class="btn quick-btn" data-device="light" data-room="bedroom" data-action="on">Bat den phong ngu</button>
+              <button class="btn quick-btn btn-ghost" data-device="light" data-room="bedroom" data-action="off">Tat den phong ngu</button>
+              <button class="btn quick-btn" data-device="lock" data-action="open">Mo cua chinh</button>
+              <button class="btn quick-btn btn-ghost" data-device="lock" data-action="close">Dong cua chinh</button>
+            </div>
+          </article>
+
+          <article class="card controls">
+            <h2>Manual Command</h2>
+            <div class="grid">
+              <label>
+                Device
+                <select id="device">
+                  <option value="light">Light</option>
+                  <option value="lock">Lock</option>
+                  <option value="ac">AC</option>
+                </select>
+              </label>
+              <label>
+                Room
+                <select id="room">
+                  <option value="living">Living</option>
+                  <option value="bedroom">Bedroom</option>
+                </select>
+              </label>
+              <label>
+                Action
+                <select id="action">
+                  <option value="on">On</option>
+                  <option value="off">Off</option>
+                  <option value="open">Open</option>
+                  <option value="close">Close</option>
+                </select>
+              </label>
+            </div>
+            <button id="manual-btn" class="btn">Gui lenh thu cong</button>
+          </article>
+
+          <article class="card status">
+            <div class="status-head">
+              <h2>Trang thai he thong</h2>
+              <button id="refresh-btn" class="btn btn-ghost">Lam moi</button>
+            </div>
+            <pre id="status-box">Dang tai...</pre>
+          </article>
+
+          <article class="card logs">
+            <h2>Nhat ky API</h2>
+            <pre id="log-box"></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-ai">
+        <div class="ai-layout">
+          <aside class="card ai-history">
+            <div class="status-head">
+              <h2>Lich su chat</h2>
+              <button id="new-chat-btn" class="btn btn-ghost">New</button>
+            </div>
+            <ul id="history-list" class="history-list"></ul>
+          </aside>
+
+          <section class="card ai-chat">
+            <h2>AI Command Console</h2>
+            <p class="hint">Bam micro de bat ghi am, bam lai de dung. Noi dung nhan duoc se tu dong dien vao o nhap de ban nhan Gui lenh AI.</p>
+            <div class="voice-row">
+              <button id="mic-btn" aria-label="Nút chép chính tả" title="Bat dau ghi am" type="button" class="composer-btn" data-state="idle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="22"></line>
+                  <line x1="8" y1="22" x2="16" y2="22"></line>
+                </svg>
+              </button>
+              <span id="mic-status">Mic: san sang</span>
+            </div>
+            <textarea id="voice-text" rows="3" placeholder="Nhap lenh AI..."></textarea>
+            <div class="ai-actions">
+              <button id="ai-btn" class="btn">Gui lenh AI</button>
+            </div>
+            <div id="chat-log" class="chat-log"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

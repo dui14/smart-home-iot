@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "D:/Code/smarthome"
+		},
+		{
+			"name": "smarthome",
+			"path": "../smarthome"
+		},
+		{
+			"name": "nhathongminh",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

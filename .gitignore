@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build and cache
+dist/
+build/
+coverage/
+.cache/
+*.tmp
+*.temp
+
+# PlatformIO / embedded
+.pio/
+wokwi/*.bin
+wokwi/*.elf
+
+# VS Code local settings
+.vscode/.browse.c_cpp.db*
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch/
+.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
