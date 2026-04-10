@@ -1,0 +1,13 @@
+﻿flowchart TD
+    A([Bat dau])
+    B[Khoi tao request dieu khien]
+    C{Lenh hop le?}
+    D[Gui lenh toi ESP32]
+    E[Cap nhat trang thai]
+    X([Ket thuc loi])
+    Z([Ket thuc])
+
+    A --> B --> C
+    C -- Dung --> D --> E --> Z
+    C -- Sai --> X
+

@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1500" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ nhiệt độ độ ẩm tự động quạt / Temperature Humidity Fan Control</title>
+  <desc id="desc">Luồng đọc DHT22, xử lý lỗi cảm biến, điều khiển relay quạt theo ngưỡng nhiệt độ 35 và 33.5 độ C.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1500" />
+
+  <text class="title" x="850" y="46" text-anchor="middle">Sơ đồ nhiệt độ độ ẩm tự động quạt / Temperature Humidity Fan Control</text>
+  <text class="subtitle" x="850" y="74" text-anchor="middle">DHT22 on GPIO15, Fan Relay on GPIO26, ON &gt;= 35C, OFF &lt;= 33.5C</text>
+
+  <rect class="terminator-start" x="690" y="90" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="850" y="124">Bắt đầu đo môi trường</text>
+  <text class="sub" x="850" y="142">Start DHT Monitoring</text>
+
+  <rect class="process" x="660" y="180" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="212">Đọc DHT22 theo chu kỳ</text>
+  <text class="sub" x="850" y="231">readAndDisplayDht()</text>
+  <text class="sub" x="850" y="250">min period around 2000ms</text>
+
+  <polygon class="decision" points="850,294 990,364 850,434 710,364" />
+  <text class="txt" x="850" y="361">Dữ liệu cảm biến hợp lệ?</text>
+  <text class="sub" x="850" y="380">isnan or dht status error?</text>
+
+  <rect class="process" x="200" y="452" width="360" height="96" rx="10" />
+  <text class="txt" x="380" y="484">Tăng dhtFailCount</text>
+  <text class="sub" x="380" y="503">Hiển thị LCD: Sensor lỗi</text>
+  <text class="sub" x="380" y="522">Print status error</text>
+
+  <polygon class="decision" points="380,580 520,650 380,720 240,650" />
+  <text class="txt" x="380" y="647">Fail count >= 3?</text>
+  <text class="sub" x="380" y="666">Cần reset sensor?</text>
+
+  <rect class="process" x="120" y="748" width="340" height="90" rx="10" />
+  <text class="txt" x="290" y="780">Khởi tạo lại DHT22</text>
+  <text class="sub" x="290" y="799">dht.setup + resetTimer</text>
+  <text class="sub" x="290" y="818">dhtFailCount = 0</text>
+
+  <rect class="process" x="660" y="452" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="484">Lưu nhiệt độ và độ ẩm</text>
+  <text class="sub" x="850" y="503">lastTempC + lastHumidity</text>
+
+  <polygon class="decision" points="850,564 990,634 850,704 710,634" />
+  <text class="txt" x="850" y="631">Temp >= 35C?</text>
+  <text class="sub" x="850" y="650">FAN_TEMP_ON_C</text>
+
+  <rect class="process" x="1100" y="748" width="360" height="90" rx="10" />
+  <text class="txt" x="1280" y="780">Bật quạt</text>
+  <text class="sub" x="1280" y="799">setFanState(true)</text>
+  <text class="sub" x="1280" y="818">GPIO26 LOW (active-low relay)</text>
+
+  <polygon class="decision" points="850,748 990,818 850,888 710,818" />
+  <text class="txt" x="850" y="815">Temp &lt;= 33.5C?</text>
+  <text class="sub" x="850" y="834">FAN_TEMP_OFF_C</text>
+
+  <rect class="process" x="660" y="908" width="380" height="90" rx="10" />
+  <text class="txt" x="850" y="940">Tắt quạt</text>
+  <text class="sub" x="850" y="959">setFanState(false)</text>
+  <text class="sub" x="850" y="978">GPIO26 HIGH</text>
+
+  <rect class="process" x="1080" y="908" width="380" height="90" rx="10" />
+  <text class="txt" x="1270" y="940">Giữ trạng thái quạt</text>
+  <text class="sub" x="1270" y="959">Keep current fan state</text>
+
+  <rect class="process" x="660" y="1022" width="380" height="92" rx="10" />
+  <text class="txt" x="850" y="1055">Cập nhật LCD và payload /sensor</text>
+  <text class="sub" x="850" y="1074">temperature, humidity, fan, wifi</text>
+  <text class="sub" x="850" y="1093">Serial log + JSON response</text>
+
+  <ellipse class="db-top" cx="1270" cy="1046" rx="130" ry="20" />
+  <rect class="db-body" x="1140" y="1046" width="260" height="84" />
+  <ellipse class="db-top" cx="1270" cy="1130" rx="130" ry="20" />
+  <text class="txt" x="1270" y="1078">Kho snapshot</text>
+  <text class="sub" x="1270" y="1097">Sensor + Device State</text>
+
+  <polygon class="io" points="650,1142 1050,1142 1010,1218 610,1218" />
+  <text class="txt" x="830" y="1176">Xuất dữ liệu ra Dashboard</text>
+  <text class="sub" x="830" y="1195">Output /api/v1/status includeSensor=true</text>
+
+  <rect class="terminator-end" x="100" y="1168" width="360" height="62" rx="31" ry="31" />
+  <text class="txt" x="280" y="1204">Kết thúc lỗi / Error End</text>
+
+  <rect class="terminator-end" x="690" y="1236" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="850" y="1269">Dừng mô phỏng / Stop Simulation</text>
+
+  <path class="line" d="M850 148 L850 180" />
+  <path class="line" d="M850 266 L850 294" />
+
+  <path class="line" d="M710 364 L560 364 L560 500" />
+  <text class="label" x="722" y="348">Không / No</text>
+
+  <path class="line" d="M850 434 L850 452" />
+  <text class="label" x="868" y="448">Có / Yes</text>
+
+  <path class="line" d="M380 548 L380 580" />
+
+  <path class="line" d="M240 650 L180 650 L180 1199 L100 1199" />
+  <text class="label" x="246" y="634">Không / No</text>
+
+  <path class="line" d="M380 720 L380 748" />
+  <text class="label" x="398" y="740">Có / Yes</text>
+
+  <path class="line" d="M290 838 L290 223 L660 223" />
+
+  <path class="line" d="M850 538 L850 564" />
+
+  <path class="line" d="M990 634 L1160 634 L1160 748" />
+  <text class="label" x="996" y="618">Có / Yes</text>
+
+  <path class="line" d="M850 704 L850 748" />
+  <text class="label" x="868" y="728">Không / No</text>
+
+  <path class="line" d="M850 888 L850 908" />
+  <text class="label" x="868" y="900">Có / Yes</text>
+
+  <path class="line" d="M990 818 L1080 818 L1080 953" />
+  <text class="label" x="998" y="802">Không / No</text>
+
+  <path class="line" d="M1280 838 L1280 1066 L1040 1066" />
+  <path class="line" d="M850 998 L850 1022" />
+  <path class="line" d="M1270 1088 L1140 1088" />
+
+  <path class="line" d="M830 1114 L830 1142" />
+  <path class="line" d="M610 1180 L520 1180 L520 223 L660 223" />
+  <text class="label" x="528" y="1162">Lặp / Loop</text>
+
+  <path class="line" d="M830 1218 L830 1236" />
+</svg>

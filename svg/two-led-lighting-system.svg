@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1220" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ hệ thống đèn 2 LED / Two LED Lighting System</title>
+  <desc id="desc">Luồng điều khiển hai đèn LED theo room living và bedroom qua ESP32 relay active-low.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1220" />
+
+  <text class="title" x="800" y="44" text-anchor="middle">Sơ đồ hệ thống đèn 2 LED / Two LED Lighting System</text>
+  <text class="subtitle" x="800" y="72" text-anchor="middle">Relay1 GPIO18 for LED1 (Living) and Relay2 GPIO19 for LED2 (Bedroom)</text>
+
+  <rect class="terminator-start" x="640" y="88" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="800" y="122">Bắt đầu điều khiển đèn</text>
+  <text class="sub" x="800" y="140">Start Light Control</text>
+
+  <polygon class="io" points="620,176 980,176 940,256 580,256" />
+  <text class="txt" x="780" y="212">Nhận lệnh /api/v1/control</text>
+  <text class="sub" x="780" y="231">Input device=light, room, action</text>
+
+  <rect class="process" x="610" y="286" width="380" height="86" rx="10" />
+  <text class="txt" x="800" y="318">Xác thực lệnh light</text>
+  <text class="sub" x="800" y="337">Validate Device Catalog</text>
+
+  <polygon class="decision" points="800,398 940,468 800,538 660,468" />
+  <text class="txt" x="800" y="465">Action on/off hợp lệ?</text>
+  <text class="sub" x="800" y="484">Valid on/off Action?</text>
+
+  <polygon class="decision" points="800,560 940,630 800,700 660,630" />
+  <text class="txt" x="800" y="627">Room = living?</text>
+  <text class="sub" x="800" y="646">Phòng khách?</text>
+
+  <polygon class="decision" points="1200,560 1340,630 1200,700 1060,630" />
+  <text class="txt" x="1200" y="627">Room = bedroom?</text>
+  <text class="sub" x="1200" y="646">Phòng ngủ?</text>
+
+  <rect class="process" x="180" y="730" width="320" height="86" rx="10" />
+  <text class="txt" x="340" y="762">Kích Relay 1</text>
+  <text class="sub" x="340" y="781">GPIO18 Active-Low</text>
+
+  <rect class="process" x="180" y="840" width="320" height="86" rx="10" />
+  <text class="txt" x="340" y="872">LED1 Living ON/OFF</text>
+  <text class="sub" x="340" y="891">Đèn phòng khách</text>
+
+  <rect class="process" x="1180" y="730" width="320" height="86" rx="10" />
+  <text class="txt" x="1340" y="762">Kích Relay 2</text>
+  <text class="sub" x="1340" y="781">GPIO19 Active-Low</text>
+
+  <rect class="process" x="1180" y="840" width="320" height="86" rx="10" />
+  <text class="txt" x="1340" y="872">LED2 Bedroom ON/OFF</text>
+  <text class="sub" x="1340" y="891">Đèn phòng ngủ</text>
+
+  <rect class="process" x="610" y="948" width="380" height="86" rx="10" />
+  <text class="txt" x="800" y="980">Cập nhật StateStore</text>
+  <text class="sub" x="800" y="999">Update Light State Cache</text>
+
+  <ellipse class="db-top" cx="1240" cy="972" rx="130" ry="20" />
+  <rect class="db-body" x="1110" y="972" width="260" height="84" />
+  <ellipse class="db-top" cx="1240" cy="1056" rx="130" ry="20" />
+  <text class="txt" x="1240" y="1004">Kho trạng thái</text>
+  <text class="sub" x="1240" y="1023">State Storage</text>
+
+  <polygon class="io" points="600,1062 1000,1062 960,1140 560,1140" />
+  <text class="txt" x="780" y="1097">Trả trạng thái về Dashboard</text>
+  <text class="sub" x="780" y="1116">Output Updated Status</text>
+
+  <rect class="terminator-end" x="640" y="1150" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="800" y="1183">Kết thúc thành công / Success End</text>
+
+  <rect class="terminator-end" x="40" y="1126" width="360" height="62" rx="31" ry="31" />
+  <text class="txt" x="220" y="1162">Kết thúc lỗi / Error End</text>
+
+  <path class="line" d="M800 146 L800 176" />
+  <path class="line" d="M780 256 L780 286" />
+  <path class="line" d="M800 372 L800 398" />
+
+  <path class="line" d="M660 468 L220 468 L220 1126" />
+  <text class="label" x="670" y="452">Không / No</text>
+
+  <path class="line" d="M800 538 L800 560" />
+  <text class="label" x="818" y="550">Có / Yes</text>
+
+  <path class="line" d="M660 630 L500 630 L500 773" />
+  <text class="label" x="672" y="612">Có / Yes</text>
+
+  <path class="line" d="M940 630 L1060 630" />
+  <text class="label" x="950" y="612">Không / No</text>
+
+  <path class="line" d="M1200 700 L1200 730" />
+  <text class="label" x="1218" y="720">Có / Yes</text>
+
+  <path class="line" d="M1060 630 L760 630 L760 1126 L400 1126" />
+  <text class="label" x="1070" y="612">Không / No</text>
+
+  <path class="line" d="M340 816 L340 840" />
+  <path class="line" d="M1340 816 L1340 840" />
+
+  <path class="line" d="M340 926 L340 991 L610 991" />
+  <path class="line" d="M1340 926 L1340 991 L990 991" />
+
+  <path class="line" d="M990 991 L1110 991" />
+  <path class="line" d="M800 1034 L800 1062" />
+  <path class="line" d="M780 1140 L780 1150" />
+</svg>

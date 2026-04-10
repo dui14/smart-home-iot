@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1040" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ kết nối vi điều khiển / Microcontroller Connections</title>
+  <desc id="desc">Sơ đồ kết nối ESP32 với cảm biến, relay, servo, giao tiếp Wi-Fi và server.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .pin { font: 700 12px 'Segoe UI', Tahoma, sans-serif; fill: #1d4ed8; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1040" />
+
+  <text class="title" x="850" y="44" text-anchor="middle">Sơ đồ kết nối vi điều khiển / Microcontroller Connections</text>
+  <text class="subtitle" x="850" y="72" text-anchor="middle">ESP32 Pin Map to Sensors, Relays, Servo, Wi-Fi and Server Sync</text>
+
+  <rect class="terminator-start" x="680" y="88" width="340" height="62" rx="31" ry="31" />
+  <text class="txt" x="850" y="124">Bật nguồn hệ thống</text>
+  <text class="sub" x="850" y="143">Power On System</text>
+
+  <rect class="process" x="620" y="210" width="360" height="110" rx="10" />
+  <text class="txt" x="800" y="252">ESP32 DevKit V1</text>
+  <text class="sub" x="800" y="271">Main Controller / Bộ điều khiển trung tâm</text>
+  <text class="sub" x="800" y="290">HTTP API + Sensor Logic + Relay Control</text>
+
+  <rect class="process" x="100" y="170" width="320" height="74" rx="10" />
+  <text class="txt" x="260" y="202">Cảm biến DHT22</text>
+  <text class="sub" x="260" y="221">Temperature + Humidity Sensor</text>
+
+  <rect class="process" x="100" y="270" width="320" height="74" rx="10" />
+  <text class="txt" x="260" y="302">Cảm biến ánh sáng LDR</text>
+  <text class="sub" x="260" y="321">Photoresistor DO Sensor</text>
+
+  <rect class="process" x="100" y="370" width="320" height="74" rx="10" />
+  <text class="txt" x="260" y="402">LCD 16x2 I2C</text>
+  <text class="sub" x="260" y="421">Display Module</text>
+
+  <rect class="process" x="1280" y="150" width="320" height="74" rx="10" />
+  <text class="txt" x="1440" y="182">Servo SG90 khóa cửa</text>
+  <text class="sub" x="1440" y="201">Door Lock Actuator</text>
+
+  <rect class="process" x="1280" y="240" width="320" height="74" rx="10" />
+  <text class="txt" x="1440" y="272">Relay 1 + LED 1</text>
+  <text class="sub" x="1440" y="291">Living Light</text>
+
+  <rect class="process" x="1280" y="330" width="320" height="74" rx="10" />
+  <text class="txt" x="1440" y="362">Relay 2 + LED 2</text>
+  <text class="sub" x="1440" y="381">Bedroom Light</text>
+
+  <rect class="process" x="1280" y="420" width="320" height="74" rx="10" />
+  <text class="txt" x="1440" y="452">Relay 3 + LED Auto</text>
+  <text class="sub" x="1440" y="471">LDR Controlled Light</text>
+
+  <rect class="process" x="1280" y="510" width="320" height="74" rx="10" />
+  <text class="txt" x="1440" y="542">Relay Fan + Fan 5V</text>
+  <text class="sub" x="1440" y="561">Temperature Controlled Fan</text>
+
+  <rect class="process" x="620" y="430" width="360" height="74" rx="10" />
+  <text class="txt" x="800" y="462">Kết nối Wi-Fi và HTTP</text>
+  <text class="sub" x="800" y="481">Wi-Fi STA + REST Endpoints</text>
+
+  <polygon class="decision" points="800,550 930,620 800,690 670,620" />
+  <text class="txt" x="800" y="617">Wi-Fi đã kết nối?</text>
+  <text class="sub" x="800" y="636">Wi-Fi Connected?</text>
+
+  <rect class="process" x="1050" y="585" width="260" height="70" rx="10" />
+  <text class="txt" x="1180" y="616">Thử kết nối lại</text>
+  <text class="sub" x="1180" y="635">Reconnect Wi-Fi</text>
+
+  <polygon class="io" points="640,718 960,718 920,798 600,798" />
+  <text class="txt" x="780" y="754">Trao đổi API</text>
+  <text class="sub" x="780" y="773">API Exchange /sensor /light /lock /ac</text>
+
+  <rect class="process" x="620" y="830" width="360" height="74" rx="10" />
+  <text class="txt" x="800" y="862">Server Node.js</text>
+  <text class="sub" x="800" y="881">/api/v1/control /voice-command /status</text>
+
+  <ellipse class="db-top" cx="1290" cy="842" rx="130" ry="20" />
+  <rect class="db-body" x="1160" y="842" width="260" height="90" />
+  <ellipse class="db-top" cx="1290" cy="932" rx="130" ry="20" />
+  <text class="txt" x="1290" y="878">Kho trạng thái</text>
+  <text class="sub" x="1290" y="897">State Store / PostgreSQL</text>
+
+  <rect class="terminator-end" x="680" y="950" width="340" height="60" rx="30" ry="30" />
+  <text class="txt" x="850" y="986">Hệ thống sẵn sàng / System Ready</text>
+
+  <path class="line" d="M850 150 L850 210" />
+
+  <path class="line" d="M420 207 L530 207 L530 245 L620 245" />
+  <text class="pin" x="534" y="198">GPIO15 DATA + 3V3/GND</text>
+
+  <path class="line" d="M420 307 L530 307 L530 272 L620 272" />
+  <text class="pin" x="534" y="297">GPIO34 DO + 3V3/GND</text>
+
+  <path class="line" d="M420 407 L530 407 L530 300 L620 300" />
+  <text class="pin" x="534" y="397">GPIO21 SDA, GPIO22 SCL</text>
+
+  <path class="line" d="M980 235 L1080 235 L1080 187 L1280 187" />
+  <text class="pin" x="1090" y="226">GPIO13 PWM + VIN/GND</text>
+
+  <path class="line" d="M980 255 L1090 255 L1090 277 L1280 277" />
+  <text class="pin" x="1096" y="247">GPIO18 Active-Low</text>
+
+  <path class="line" d="M980 275 L1100 275 L1100 367 L1280 367" />
+  <text class="pin" x="1106" y="308">GPIO19 Active-Low</text>
+
+  <path class="line" d="M980 295 L1110 295 L1110 457 L1280 457" />
+  <text class="pin" x="1116" y="352">GPIO16 Active-Low</text>
+
+  <path class="line" d="M980 315 L1120 315 L1120 547 L1280 547" />
+  <text class="pin" x="1126" y="396">GPIO26 Active-Low</text>
+
+  <path class="line" d="M800 320 L800 430" />
+  <path class="line" d="M800 504 L800 550" />
+
+  <path class="line" d="M800 690 L800 718" />
+  <text class="label" x="818" y="708">Có / Yes</text>
+
+  <path class="line" d="M930 620 L1050 620" />
+  <text class="label" x="940" y="606">Không / No</text>
+
+  <path class="line" d="M1180 585 L1180 540 L850 540 L850 550" />
+
+  <path class="line" d="M780 798 L780 830" />
+  <path class="line" d="M980 867 L1160 867" />
+  <path class="line" d="M1160 905 L980 905" />
+  <path class="line" d="M850 904 L850 950" />
+</svg>

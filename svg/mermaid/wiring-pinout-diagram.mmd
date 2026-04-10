@@ -1,0 +1,12 @@
+﻿flowchart TD
+    A([Bat dau])
+    B[Khoi tao danh sach chan GPIO]
+    C{Noi day dung chan?}
+    D[Noi lai day]
+    E[Cap nguon va test module]
+    Z([Ket thuc])
+
+    A --> B --> C
+    C -- Dung --> E --> Z
+    C -- Sai --> D --> C
+

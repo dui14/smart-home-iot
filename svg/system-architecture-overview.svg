@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ toàn khối hệ thống / System Architecture Overview</title>
+  <desc id="desc">Sơ đồ kiến trúc làm việc giữa người dùng, web dashboard, server API, AI parser, ESP32, thiết bị phần cứng và kho trạng thái.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .shape-text { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .shape-sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .legend-text { font: 600 12px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1100" />
+
+  <text class="title" x="850" y="44" text-anchor="middle">Sơ đồ toàn khối hệ thống / System Architecture Overview</text>
+  <text class="subtitle" x="850" y="72" text-anchor="middle">Smart Home IoT: Dashboard, AI, Server, ESP32, Devices, State Storage</text>
+
+  <rect class="terminator-start" x="700" y="88" width="300" height="64" rx="32" ry="32" />
+  <text class="shape-text" x="850" y="126">Bắt đầu</text>
+  <text class="shape-sub" x="850" y="145">Start</text>
+
+  <polygon class="io" points="670,188 1030,188 980,272 620,272" />
+  <text class="shape-text" x="825" y="225">Nhập lệnh tay hoặc giọng nói</text>
+  <text class="shape-sub" x="825" y="244">Manual or Voice Command Input</text>
+
+  <rect class="process" x="690" y="308" width="320" height="88" rx="10" />
+  <text class="shape-text" x="850" y="342">Dashboard Web</text>
+  <text class="shape-sub" x="850" y="361">public/index.html + app.js</text>
+
+  <rect class="process" x="690" y="428" width="320" height="88" rx="10" />
+  <text class="shape-text" x="850" y="462">Server Node.js API</text>
+  <text class="shape-sub" x="850" y="481">/api/v1/control, /voice-command, /status</text>
+
+  <polygon class="decision" points="850,544 990,614 850,684 710,614" />
+  <text class="shape-text" x="850" y="611">Lệnh AI?</text>
+  <text class="shape-sub" x="850" y="630">AI Command?</text>
+
+  <rect class="process" x="300" y="692" width="320" height="88" rx="10" />
+  <text class="shape-text" x="460" y="726">Phân tích AI OpenRouter</text>
+  <text class="shape-sub" x="460" y="745">OpenRouter Parse + Local Fallback</text>
+
+  <polygon class="decision" points="460,802 600,872 460,942 320,872" />
+  <text class="shape-text" x="460" y="869">JSON hợp lệ?</text>
+  <text class="shape-sub" x="460" y="888">Valid JSON?</text>
+
+  <rect class="terminator-end" x="120" y="972" width="320" height="62" rx="31" ry="31" />
+  <text class="shape-text" x="280" y="1007">Kết thúc lỗi</text>
+  <text class="shape-sub" x="280" y="1026">Error End</text>
+
+  <rect class="process" x="690" y="692" width="320" height="88" rx="10" />
+  <text class="shape-text" x="850" y="726">Điều phối lệnh thiết bị</text>
+  <text class="shape-sub" x="850" y="745">Device Orchestration + Validation</text>
+
+  <rect class="process" x="690" y="812" width="320" height="88" rx="10" />
+  <text class="shape-text" x="850" y="846">ESP32 HTTP API</text>
+  <text class="shape-sub" x="850" y="865">/light, /lock, /ac, /sensor</text>
+
+  <rect class="process" x="690" y="932" width="320" height="88" rx="10" />
+  <text class="shape-text" x="850" y="966">Thiết bị phần cứng</text>
+  <text class="shape-sub" x="850" y="985">Relay, LED, Servo, DHT22, LDR, Fan</text>
+
+  <rect class="terminator-end" x="700" y="1036" width="300" height="56" rx="28" ry="28" />
+  <text class="shape-text" x="850" y="1068">Kết thúc thành công / Success End</text>
+
+  <ellipse class="db-top" cx="1300" cy="430" rx="140" ry="22" />
+  <rect class="db-body" x="1160" y="430" width="280" height="110" />
+  <ellipse class="db-top" cx="1300" cy="540" rx="140" ry="22" />
+  <text class="shape-text" x="1300" y="477">Kho trạng thái</text>
+  <text class="shape-sub" x="1300" y="496">State Store / PostgreSQL</text>
+
+  <polygon class="io" points="1130,790 1490,790 1440,874 1080,874" />
+  <text class="shape-text" x="1285" y="827">Xuất trạng thái thời gian thực</text>
+  <text class="shape-sub" x="1285" y="846">Realtime Status Output</text>
+
+  <path class="line" d="M850 152 L850 188" />
+  <path class="line" d="M825 272 L825 308" />
+  <path class="line" d="M850 396 L850 428" />
+  <path class="line" d="M850 516 L850 544" />
+
+  <path class="line" d="M850 684 L850 692" />
+  <text class="label" x="868" y="690">Không / No</text>
+
+  <path class="line" d="M710 614 L640 614 L640 736 L620 736" />
+  <text class="label" x="652" y="598">Có / Yes</text>
+
+  <path class="line" d="M460 780 L460 802" />
+  <path class="line" d="M600 872 L650 872 L650 736 L690 736" />
+  <text class="label" x="608" y="856">Có / Yes</text>
+
+  <path class="line" d="M460 942 L460 956 L280 956 L280 972" />
+  <text class="label" x="470" y="956">Không / No</text>
+
+  <path class="line" d="M850 780 L850 812" />
+  <path class="line" d="M850 900 L850 932" />
+  <path class="line" d="M850 1020 L850 1036" />
+
+  <path class="line" d="M1010 472 L1160 472" />
+  <path class="line" d="M1160 520 L1010 520" />
+
+  <path class="line" d="M1010 856 L1080 856" />
+  <path class="line" d="M1285 790 L1285 352 L1010 352" />
+
+  <rect x="90" y="82" width="216" height="154" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+  <rect x="108" y="102" width="26" height="16" rx="8" class="terminator-start" />
+  <text class="legend-text" x="146" y="115">Terminator</text>
+  <rect x="108" y="127" width="26" height="16" rx="4" class="process" />
+  <text class="legend-text" x="146" y="140">Process</text>
+  <polygon points="121,152 134,160 121,168 108,160" class="decision" />
+  <text class="legend-text" x="146" y="163">Decision</text>
+  <polygon points="108,176 134,176 130,192 104,192" class="io" />
+  <text class="legend-text" x="146" y="189">Input/Output</text>
+  <ellipse cx="121" cy="212" rx="13" ry="4" class="db-top" />
+  <rect x="108" y="212" width="26" height="10" class="db-body" />
+  <ellipse cx="121" cy="222" rx="13" ry="4" class="db-top" />
+  <text class="legend-text" x="146" y="220">Database</text>
+</svg>

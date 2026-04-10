@@ -24,6 +24,8 @@ static const uint8_t PIN_LIGHT_1 = 16;    // Phong khach
 static const uint8_t PIN_LIGHT_2 = 17;    // Phong ngu 1
 static const uint8_t PIN_LIGHT_3 = 18;    // Phong ngu 2
 static const uint8_t PIN_LIGHT_4 = 19;    // Phong bep
+static const uint8_t PIN_LDR_DO = 34;
+static const uint8_t PIN_FAN_RELAY = 26;
 
 // ========================
 // Devices
@@ -46,6 +48,11 @@ static bool lcdReady = false;
 static bool doorOpen = false;
 static bool roomLights[4] = {false, false, false, false};
 static bool acOn = false;
+static bool fanOn = false;
+static bool ambientDark = false;
+static bool ambientReady = false;
+static int pendingLdrDoState = -1;
+static uint32_t pendingLdrSinceMs = 0;
 WebServer httpServer(80);
 
 static const char *WIFI_SSID = WIFI_SSID_VALUE;
@@ -56,15 +63,23 @@ static uint32_t lastWifiRetryMs = 0;
 
 static const uint8_t DOOR_OPEN_ANGLE = 0;
 static const uint8_t DOOR_CLOSE_ANGLE = 90;
+static const uint8_t AUTO_LIGHT_ROOM_INDEX = 0;
+static const uint32_t LDR_SAMPLE_INTERVAL_MS = 200;
+static const uint32_t LDR_SWITCH_HOLD_MS = 600;
+static uint32_t lastLdrMs = 0;
+static const float FAN_TEMP_ON_C = 35.0f;
+static const float FAN_TEMP_OFF_C = 33.5f;
 
 // ========================
 // Helpers
 // ========================
 static void lcdPrintPadded(uint8_t row, const String &text);
 static void readAndDisplayDht();
+static void updateLightByAmbient();
 static bool probeI2cAddress(uint8_t address);
 static void processSerialCommands();
 static void setDoorState(bool openDoor);
+static void setFanState(bool on);
 static void setLightState(uint8_t lightIndex, bool on);
 static void printLightHelp();
 static void printStatus();
@@ -103,6 +118,11 @@ void setup() {
     setLightState(i, false);
   }
 
+  pinMode(PIN_FAN_RELAY, OUTPUT);
+  setFanState(false);
+
+  pinMode(PIN_LDR_DO, INPUT);
+
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
   Wire.setClock(100000); // tốc độ mặc định cho LCD I2C
 
@@ -123,22 +143,28 @@ void setup() {
   dht.resetTimer();
   dhtIntervalMs = static_cast<uint32_t>(dht.getMinimumSamplingPeriod());
   setupHttpServer();
+  updateLightByAmbient();
 
   Serial.printf("[Pins] DHT=%u, LCD SDA=%u, SCL=%u\n",
                 PIN_DHT_DATA, PIN_I2C_SDA, PIN_I2C_SCL);
   Serial.printf("[Pins] SERVO=%u\n", PIN_SERVO_DOOR);
   Serial.printf("[Pins] LIGHT1=%u, LIGHT2=%u, LIGHT3=%u, LIGHT4=%u\n",
                 PIN_LIGHT_1, PIN_LIGHT_2, PIN_LIGHT_3, PIN_LIGHT_4);
+  Serial.printf("[Pins] LDR_DO=%u\n", PIN_LDR_DO);
+  Serial.printf("[Pins] FAN_RELAY=%u\n", PIN_FAN_RELAY);
   Serial.printf("[DHT] Model=%s, minPeriod=%ums\n",
                 (dht.getModel() == DHTesp::DHT22) ? "DHT22" : "OTHER",
                 static_cast<unsigned>(dhtIntervalMs));
   Serial.println(F("[CMD] OPEN / CLOSE / STATUS"));
   printLightHelp();
+  Serial.printf("[AUTO] LDR controls LIGHT%u (dark=ON, bright=OFF)\n",
+                static_cast<unsigned>(AUTO_LIGHT_ROOM_INDEX + 1));
 }
 
 void loop() {
   ensureWifiConnected();
   httpServer.handleClient();
+  updateLightByAmbient();
   processSerialCommands();
   readAndDisplayDht();
 }
@@ -182,12 +208,62 @@ static void readAndDisplayDht() {
   lastTempC = t;
   lastHumidity = h;
 
+  if (!fanOn && lastTempC >= FAN_TEMP_ON_C) {
+    setFanState(true);
+  } else if (fanOn && lastTempC <= FAN_TEMP_OFF_C) {
+    setFanState(false);
+  }
+
   Serial.printf("[DHT] Nhiet do %.1fC | Do am %.0f%%\n", lastTempC, lastHumidity);
 
   const String line0 = String("Nhiet: ") + String(lastTempC, 1) + "C";
   const String line1 = String("Do am: ") + String(lastHumidity, 0) + "%";
   lcdPrintPadded(0, line0);
   lcdPrintPadded(1, line1);
+}
+
+static void updateLightByAmbient() {
+  const uint32_t now = millis();
+  if (ambientReady && (now - lastLdrMs) < LDR_SAMPLE_INTERVAL_MS) {
+    return;
+  }
+  lastLdrMs = now;
+
+  const int doState = digitalRead(PIN_LDR_DO);
+  const bool dark = (doState == HIGH);
+
+  if (!ambientReady) {
+    ambientDark = dark;
+    ambientReady = true;
+    setLightState(AUTO_LIGHT_ROOM_INDEX, ambientDark);
+    Serial.printf("[LDR] Init state=%s (DO=%d)\n", ambientDark ? "DARK" : "BRIGHT", doState);
+    return;
+  }
+
+  if (dark == ambientDark) {
+    pendingLdrDoState = -1;
+    pendingLdrSinceMs = 0;
+    return;
+  }
+
+  if (pendingLdrDoState != doState) {
+    pendingLdrDoState = doState;
+    pendingLdrSinceMs = now;
+    return;
+  }
+
+  if ((now - pendingLdrSinceMs) < LDR_SWITCH_HOLD_MS) {
+    return;
+  }
+
+  ambientDark = dark;
+  pendingLdrDoState = -1;
+  pendingLdrSinceMs = 0;
+  setLightState(AUTO_LIGHT_ROOM_INDEX, ambientDark);
+  Serial.printf("[LDR] Ambient=%s (DO=%d) -> AUTO light %s\n",
+                ambientDark ? "DARK" : "BRIGHT",
+                doState,
+                ambientDark ? "ON" : "OFF");
 }
 
 static void lcdPrintPadded(uint8_t row, const String &text) {
@@ -387,10 +463,15 @@ static void handleHttpSensor() {
                 "\"temperature\":" + (isnan(lastTempC) ? String("null") : String(lastTempC, 1)) +
                 ",\"humidity\":" + (isnan(lastHumidity) ? String("null") : String(lastHumidity, 0)) +
                 "}," +
+                "\"ldr\":{" +
+                "\"do\":" + String(ambientDark ? 1 : 0) +
+                ",\"state\":\"" + (ambientDark ? "dark" : "bright") + "\"" +
+                "}," +
                 "\"temperature\":" + (isnan(lastTempC) ? String("null") : String(lastTempC, 1)) +
                 ",\"humidity\":" + (isnan(lastHumidity) ? String("null") : String(lastHumidity, 0)) +
                 ",\"door\":\"" + (doorOpen ? "open" : "close") + "\"" +
                 ",\"ac\":\"" + (acOn ? "on" : "off") + "\"" +
+                ",\"fan\":\"" + (fanOn ? "on" : "off") + "\"" +
                 ",\"wifi\":\"" + ((WiFi.status() == WL_CONNECTED) ? "connected" : "disconnected") + "\"" +
                 ",\"lights\":{" +
                 "\"living\":\"" + (roomLights[3] ? "on" : "off") + "\"," +
@@ -511,6 +592,12 @@ static void setDoorState(bool openDoor) {
   Serial.printf("[DOOR] %s (%u deg)\n", doorOpen ? "OPEN" : "CLOSE", targetAngle);
 }
 
+static void setFanState(bool on) {
+  fanOn = on;
+  digitalWrite(PIN_FAN_RELAY, fanOn ? LOW : HIGH);
+  Serial.printf("[FAN] %s\n", fanOn ? "ON" : "OFF");
+}
+
 static void setLightState(uint8_t lightIndex, bool on) {
   if (lightIndex >= 4) {
     return;
@@ -534,6 +621,13 @@ static void printStatus() {
                 doorOpen ? "OPEN" : "CLOSE",
                 lastTempC,
                 lastHumidity);
+  Serial.printf("[STATUS] Ambient=%s | AUTO_LIGHT=%s\n",
+                ambientDark ? "DARK" : "BRIGHT",
+                roomLights[AUTO_LIGHT_ROOM_INDEX] ? "ON" : "OFF");
+  Serial.printf("[STATUS] FAN=%s | FAN_ON>=%.1fC | FAN_OFF<=%.1fC\n",
+                fanOn ? "ON" : "OFF",
+                FAN_TEMP_ON_C,
+                FAN_TEMP_OFF_C);
   Serial.printf("[STATUS] WiFi=%s | IP=%s\n",
                 (WiFi.status() == WL_CONNECTED) ? "CONNECTED" : "DISCONNECTED",
                 WiFi.localIP().toString().c_str());

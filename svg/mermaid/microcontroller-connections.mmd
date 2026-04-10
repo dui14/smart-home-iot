@@ -1,0 +1,13 @@
+﻿flowchart TD
+    A([Bat dau])
+    B[Khoi tao ESP32]
+    C{Wi-Fi da ket noi?}
+    D[Ket noi lai Wi-Fi]
+    E[Doc cam bien va dieu khien relay]
+    F[Gui du lieu ve server]
+    Z([Ket thuc])
+
+    A --> B --> C
+    C -- Dung --> E --> F --> Z
+    C -- Sai --> D --> C
+

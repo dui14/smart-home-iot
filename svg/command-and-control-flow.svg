@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1620" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ luồng điều khiển tổng quát / Command and Control Flow</title>
+  <desc id="desc">Luồng tổng quát từ nhập lệnh, parse AI hoặc manual validation, gửi ESP32 và cập nhật trạng thái.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1620" />
+
+  <text class="title" x="850" y="46" text-anchor="middle">Sơ đồ luồng điều khiển tổng quát / Command and Control Flow</text>
+  <text class="subtitle" x="850" y="74" text-anchor="middle">From Web Input to ESP32 Execution and Status Synchronization</text>
+
+  <rect class="terminator-start" x="690" y="90" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="850" y="124">Bắt đầu</text>
+  <text class="sub" x="850" y="142">Start</text>
+
+  <polygon class="io" points="640,186 1060,186 1010,270 590,270" />
+  <text class="txt" x="825" y="222">Nhập lệnh người dùng</text>
+  <text class="sub" x="825" y="241">User Command Input (Text/Voice/Manual)</text>
+
+  <rect class="process" x="660" y="306" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="338">Tạo request_id và payload</text>
+  <text class="sub" x="850" y="357">Build Request Envelope</text>
+
+  <polygon class="decision" points="850,420 990,490 850,560 710,490" />
+  <text class="txt" x="850" y="487">Lệnh AI/Voice?</text>
+  <text class="sub" x="850" y="506">AI or Voice Command?</text>
+
+  <rect class="process" x="260" y="546" width="320" height="86" rx="10" />
+  <text class="txt" x="420" y="578">Phân tích AI</text>
+  <text class="sub" x="420" y="597">OpenRouter + Local Parser Fallback</text>
+
+  <polygon class="decision" points="420,658 560,728 420,798 280,728" />
+  <text class="txt" x="420" y="725">Parse hợp lệ?</text>
+  <text class="sub" x="420" y="744">Parse Valid?</text>
+
+  <rect class="process" x="980" y="546" width="360" height="86" rx="10" />
+  <text class="txt" x="1160" y="578">Xác thực lệnh tay</text>
+  <text class="sub" x="1160" y="597">Manual Payload Validation</text>
+
+  <rect class="process" x="660" y="812" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="844">Kiểm tra Device Catalog</text>
+  <text class="sub" x="850" y="863">validateCommand(device, room, action)</text>
+
+  <polygon class="decision" points="850,924 990,994 850,1064 710,994" />
+  <text class="txt" x="850" y="991">Lệnh hợp lệ?</text>
+  <text class="sub" x="850" y="1010">Command Valid?</text>
+
+  <rect class="process" x="660" y="1098" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="1130">Gửi ESP32 với retry</text>
+  <text class="sub" x="850" y="1149">Dispatch /light /lock /ac with timeout</text>
+
+  <polygon class="decision" points="850,1210 990,1280 850,1350 710,1280" />
+  <text class="txt" x="850" y="1277">Thiết bị phản hồi OK?</text>
+  <text class="sub" x="850" y="1296">ESP32 Response OK?</text>
+
+  <rect class="process" x="660" y="1364" width="380" height="86" rx="10" />
+  <text class="txt" x="850" y="1396">Cập nhật trạng thái và trace</text>
+  <text class="sub" x="850" y="1415">Update StateStore + Trace Log</text>
+
+  <ellipse class="db-top" cx="1290" cy="1380" rx="130" ry="20" />
+  <rect class="db-body" x="1160" y="1380" width="260" height="84" />
+  <ellipse class="db-top" cx="1290" cy="1464" rx="130" ry="20" />
+  <text class="txt" x="1290" y="1412">Kho trạng thái</text>
+  <text class="sub" x="1290" y="1431">State Store / PostgreSQL</text>
+
+  <polygon class="io" points="630,1472 1070,1472 1020,1540 580,1540" />
+  <text class="txt" x="825" y="1504">Trả kết quả về Dashboard</text>
+  <text class="sub" x="825" y="1523">Return Response + Updated Status</text>
+
+  <rect class="terminator-end" x="118" y="1390" width="320" height="60" rx="30" ry="30" />
+  <text class="txt" x="278" y="1425">Kết thúc lỗi / Error End</text>
+
+  <rect class="terminator-end" x="690" y="1548" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="850" y="1580">Kết thúc thành công / Success End</text>
+
+  <path class="line" d="M850 148 L850 186" />
+  <path class="line" d="M825 270 L825 306" />
+  <path class="line" d="M850 392 L850 420" />
+
+  <path class="line" d="M710 490 L580 490 L580 589" />
+  <text class="label" x="596" y="474">Có / Yes</text>
+
+  <path class="line" d="M990 490 L980 490 L980 589" />
+  <text class="label" x="994" y="474">Không / No</text>
+
+  <path class="line" d="M420 632 L420 658" />
+  <path class="line" d="M560 728 L620 728 L620 855 L660 855" />
+  <text class="label" x="570" y="712">Có / Yes</text>
+
+  <path class="line" d="M420 798 L420 836 L278 836 L278 1390" />
+  <text class="label" x="430" y="816">Không / No</text>
+
+  <path class="line" d="M1160 632 L1160 855 L1040 855" />
+
+  <path class="line" d="M850 898 L850 924" />
+  <path class="line" d="M710 994 L600 994 L600 1420 L438 1420" />
+  <text class="label" x="610" y="978">Không / No</text>
+
+  <path class="line" d="M850 1064 L850 1098" />
+  <text class="label" x="868" y="1088">Có / Yes</text>
+
+  <path class="line" d="M850 1184 L850 1210" />
+  <path class="line" d="M710 1280 L560 1280 L560 1420 L438 1420" />
+  <text class="label" x="570" y="1264">Không / No</text>
+
+  <path class="line" d="M850 1350 L850 1364" />
+  <text class="label" x="868" y="1342">Có / Yes</text>
+
+  <path class="line" d="M1040 1407 L1160 1407" />
+  <path class="line" d="M850 1450 L850 1472" />
+  <path class="line" d="M825 1540 L825 1548" />
+</svg>

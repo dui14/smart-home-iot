@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1780" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ Voice Assistant AI điều khiển thiết bị / Voice AI Control System</title>
+  <desc id="desc">Luồng text và voice từ web, parse AI OpenRouter, fallback local parser, validate command và điều khiển lock fan light.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1780" />
+
+  <text class="title" x="900" y="46" text-anchor="middle">Sơ đồ Voice Assistant AI điều khiển thiết bị / Voice AI Control System</text>
+  <text class="subtitle" x="900" y="74" text-anchor="middle">Text + Voice Input, OpenRouter Parsing, Device Validation, ESP32 Execution, TTS Feedback</text>
+
+  <rect class="terminator-start" x="740" y="90" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="900" y="124">Bắt đầu phiên điều khiển</text>
+  <text class="sub" x="900" y="142">Start Voice AI Session</text>
+
+  <polygon class="io" points="700,180 1100,180 1060,258 660,258" />
+  <text class="txt" x="880" y="215">Nhập lệnh text hoặc voice</text>
+  <text class="sub" x="880" y="234">Input from AI Tab (voice-text + mic)</text>
+
+  <polygon class="decision" points="900,286 1040,356 900,426 760,356" />
+  <text class="txt" x="900" y="353">Là giọng nói?</text>
+  <text class="sub" x="900" y="372">Voice Input?</text>
+
+  <rect class="process" x="220" y="444" width="360" height="90" rx="10" />
+  <text class="txt" x="400" y="476">Web Speech API</text>
+  <text class="sub" x="400" y="495">SpeechRecognition transcript</text>
+  <text class="sub" x="400" y="514">voiceText.value = transcript</text>
+
+  <rect class="process" x="1220" y="444" width="360" height="90" rx="10" />
+  <text class="txt" x="1400" y="476">Dùng text đã nhập</text>
+  <text class="sub" x="1400" y="495">Use Typed Command</text>
+  <text class="sub" x="1400" y="514">No speech conversion</text>
+
+  <rect class="process" x="700" y="560" width="400" height="90" rx="10" />
+  <text class="txt" x="900" y="592">POST /api/v1/voice-command</text>
+  <text class="sub" x="900" y="611">request_id + transcript + preferred_room</text>
+  <text class="sub" x="900" y="630">source: web-chat or voice-web</text>
+
+  <rect class="process" x="700" y="676" width="400" height="90" rx="10" />
+  <text class="txt" x="900" y="708">CommandService.aiControl</text>
+  <text class="sub" x="900" y="727">OpenRouterClient.parseCommand()</text>
+  <text class="sub" x="900" y="746">fallback parseTextCommandLocally()</text>
+
+  <polygon class="decision" points="900,794 1040,864 900,934 760,864" />
+  <text class="txt" x="900" y="861">Parse AI thành công?</text>
+  <text class="sub" x="900" y="880">Parsed Command Exists?</text>
+
+  <rect class="process" x="700" y="958" width="400" height="90" rx="10" />
+  <text class="txt" x="900" y="990">validateCommand()</text>
+  <text class="sub" x="900" y="1009">device, room, action in catalog</text>
+  <text class="sub" x="900" y="1028">lock, light, ac</text>
+
+  <polygon class="decision" points="900,1074 1040,1144 900,1214 760,1144" />
+  <text class="txt" x="900" y="1141">Command hợp lệ?</text>
+  <text class="sub" x="900" y="1160">Valid Command?</text>
+
+  <polygon class="decision" points="900,1238 1040,1308 900,1378 760,1308" />
+  <text class="txt" x="900" y="1305">Thiết bị nào?</text>
+  <text class="sub" x="900" y="1324">Target Device?</text>
+
+  <rect class="process" x="220" y="1400" width="320" height="90" rx="10" />
+  <text class="txt" x="380" y="1432">Light Endpoint</text>
+  <text class="sub" x="380" y="1451">GET /light?room=&amp;state=</text>
+
+  <rect class="process" x="740" y="1400" width="320" height="90" rx="10" />
+  <text class="txt" x="900" y="1432">Lock Endpoint</text>
+  <text class="sub" x="900" y="1451">GET /lock?state=open|close</text>
+
+  <rect class="process" x="1260" y="1400" width="320" height="90" rx="10" />
+  <text class="txt" x="1420" y="1432">AC/Fan Endpoint</text>
+  <text class="sub" x="1420" y="1451">GET /ac?state=on|off</text>
+
+  <rect class="process" x="700" y="1510" width="400" height="86" rx="10" />
+  <text class="txt" x="900" y="1542">Cập nhật trạng thái và phản hồi</text>
+  <text class="sub" x="900" y="1561">StateStore + chat log + speakResult()</text>
+
+  <ellipse class="db-top" cx="1280" cy="1528" rx="130" ry="20" />
+  <rect class="db-body" x="1150" y="1528" width="260" height="80" />
+  <ellipse class="db-top" cx="1280" cy="1608" rx="130" ry="20" />
+  <text class="txt" x="1280" y="1559">Kho trạng thái</text>
+  <text class="sub" x="1280" y="1578">Conversation + Device State</text>
+
+  <polygon class="io" points="700,1616 1100,1616 1060,1688 660,1688" />
+  <text class="txt" x="880" y="1648">Output: Done + assistant line + status</text>
+  <text class="sub" x="880" y="1667">Điều khiển đèn, quạt, khóa bằng text/voice</text>
+
+  <rect class="terminator-end" x="80" y="1530" width="360" height="62" rx="31" ry="31" />
+  <text class="txt" x="260" y="1565">Kết thúc lỗi / Error End</text>
+
+  <rect class="terminator-end" x="740" y="1696" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="900" y="1729">Kết thúc thành công / Success End</text>
+
+  <path class="line" d="M900 148 L900 180" />
+  <path class="line" d="M880 258 L880 286" />
+
+  <path class="line" d="M760 356 L580 356 L580 489" />
+  <text class="label" x="772" y="340">Có / Yes</text>
+
+  <path class="line" d="M1040 356 L1220 489" />
+  <text class="label" x="1046" y="340">Không / No</text>
+
+  <path class="line" d="M400 534 L400 605 L700 605" />
+  <path class="line" d="M1400 534 L1400 605 L1100 605" />
+
+  <path class="line" d="M900 650 L900 676" />
+  <path class="line" d="M900 766 L900 794" />
+
+  <path class="line" d="M760 864 L620 864 L620 1561 L440 1561" />
+  <text class="label" x="772" y="848">Không / No</text>
+
+  <path class="line" d="M900 934 L900 958" />
+  <text class="label" x="918" y="948">Có / Yes</text>
+
+  <path class="line" d="M900 1048 L900 1074" />
+
+  <path class="line" d="M760 1144 L600 1144 L600 1561 L440 1561" />
+  <text class="label" x="772" y="1128">Không / No</text>
+
+  <path class="line" d="M900 1214 L900 1238" />
+  <text class="label" x="918" y="1228">Có / Yes</text>
+
+  <path class="line" d="M760 1308 L540 1308 L540 1445" />
+  <text class="label" x="772" y="1292">Light</text>
+
+  <path class="line" d="M900 1378 L900 1400" />
+  <text class="label" x="918" y="1392">Lock</text>
+
+  <path class="line" d="M1040 1308 L1260 1445" />
+  <text class="label" x="1050" y="1292">AC/Fan</text>
+
+  <path class="line" d="M380 1490 L380 1553 L700 1553" />
+  <path class="line" d="M900 1490 L900 1510" />
+  <path class="line" d="M1420 1490 L1420 1553 L1100 1553" />
+
+  <path class="line" d="M1100 1553 L1150 1553" />
+  <path class="line" d="M900 1596 L900 1616" />
+  <path class="line" d="M880 1688 L880 1696" />
+</svg>

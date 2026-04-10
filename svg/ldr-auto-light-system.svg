@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1460" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ cảm biến ánh sáng tự động đèn / LDR Auto Light System</title>
+  <desc id="desc">Luồng tự động bật tắt đèn theo tín hiệu LDR DO với cơ chế debounce và cập nhật trạng thái.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1460" />
+
+  <text class="title" x="800" y="46" text-anchor="middle">Sơ đồ cảm biến ánh sáng tự động đèn / LDR Auto Light System</text>
+  <text class="subtitle" x="800" y="74" text-anchor="middle">PIN_LDR_DO=34, AUTO_LIGHT on Relay3 GPIO16, Debounce 600ms</text>
+
+  <rect class="terminator-start" x="640" y="90" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="800" y="124">Bắt đầu Auto Light</text>
+  <text class="sub" x="800" y="142">Start Auto Light Rule</text>
+
+  <rect class="process" x="610" y="180" width="380" height="86" rx="10" />
+  <text class="txt" x="800" y="212">Đọc LDR DO mỗi 200ms</text>
+  <text class="sub" x="800" y="231">Sample digitalRead(GPIO34)</text>
+  <text class="sub" x="800" y="250">LDR_SAMPLE_INTERVAL_MS = 200</text>
+
+  <polygon class="decision" points="800,290 940,360 800,430 660,360" />
+  <text class="txt" x="800" y="357">Ambient đã sẵn sàng?</text>
+  <text class="sub" x="800" y="376">ambientReady?</text>
+
+  <rect class="process" x="150" y="444" width="380" height="86" rx="10" />
+  <text class="txt" x="340" y="476">Khởi tạo trạng thái đầu</text>
+  <text class="sub" x="340" y="495">Init ambientDark from DO</text>
+  <text class="sub" x="340" y="514">setLightState(AUTO_LIGHT, ambientDark)</text>
+
+  <polygon class="decision" points="800,466 940,536 800,606 660,536" />
+  <text class="txt" x="800" y="533">DO thay đổi?</text>
+  <text class="sub" x="800" y="552">LDR state changed?</text>
+
+  <rect class="process" x="610" y="630" width="380" height="86" rx="10" />
+  <text class="txt" x="800" y="662">Giữ ổn định chuyển mức</text>
+  <text class="sub" x="800" y="681">Hold pending state 600ms</text>
+  <text class="sub" x="800" y="700">LDR_SWITCH_HOLD_MS = 600</text>
+
+  <polygon class="decision" points="800,740 940,810 800,880 660,810" />
+  <text class="txt" x="800" y="807">Đủ 600ms chưa?</text>
+  <text class="sub" x="800" y="826">Stable for 600ms?</text>
+
+  <polygon class="decision" points="800,900 940,970 800,1040 660,970" />
+  <text class="txt" x="800" y="967">Trời tối (DO=HIGH)?</text>
+  <text class="sub" x="800" y="986">Ambient Dark?</text>
+
+  <rect class="process" x="220" y="1060" width="360" height="90" rx="10" />
+  <text class="txt" x="400" y="1092">Bật Relay3 và LED Auto</text>
+  <text class="sub" x="400" y="1111">setLightState(GPIO16, ON)</text>
+  <text class="sub" x="400" y="1130">Dark -> Light ON</text>
+
+  <rect class="process" x="1020" y="1060" width="360" height="90" rx="10" />
+  <text class="txt" x="1200" y="1092">Tắt Relay3 và LED Auto</text>
+  <text class="sub" x="1200" y="1111">setLightState(GPIO16, OFF)</text>
+  <text class="sub" x="1200" y="1130">Bright -> Light OFF</text>
+
+  <rect class="process" x="610" y="1176" width="380" height="86" rx="10" />
+  <text class="txt" x="800" y="1208">Cập nhật trạng thái cảm biến</text>
+  <text class="sub" x="800" y="1227">Update ambientDark + sensor payload</text>
+
+  <ellipse class="db-top" cx="1250" cy="1200" rx="130" ry="20" />
+  <rect class="db-body" x="1120" y="1200" width="260" height="80" />
+  <ellipse class="db-top" cx="1250" cy="1280" rx="130" ry="20" />
+  <text class="txt" x="1250" y="1231">Kho trạng thái</text>
+  <text class="sub" x="1250" y="1250">State Store / Sensor Snapshot</text>
+
+  <polygon class="io" points="600,1288 1000,1288 960,1362 560,1362" />
+  <text class="txt" x="780" y="1322">Xuất /sensor cho Dashboard</text>
+  <text class="sub" x="780" y="1341">Output ldr.do + ldr.state + lights</text>
+
+  <rect class="terminator-end" x="640" y="1376" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="800" y="1409">Dừng mô phỏng / Stop Simulation</text>
+
+  <path class="line" d="M800 148 L800 180" />
+  <path class="line" d="M800 266 L800 290" />
+
+  <path class="line" d="M660 360 L530 360 L530 487" />
+  <text class="label" x="670" y="344">Không / No</text>
+
+  <path class="line" d="M800 430 L800 466" />
+  <text class="label" x="818" y="450">Có / Yes</text>
+
+  <path class="line" d="M340 530 L340 1208 L610 1208" />
+
+  <path class="line" d="M660 536 L520 536 L520 223 L610 223" />
+  <text class="label" x="670" y="520">Không / No</text>
+
+  <path class="line" d="M800 606 L800 630" />
+  <text class="label" x="818" y="620">Có / Yes</text>
+
+  <path class="line" d="M800 716 L800 740" />
+
+  <path class="line" d="M660 810 L540 810 L540 223 L610 223" />
+  <text class="label" x="670" y="794">Không / No</text>
+
+  <path class="line" d="M800 880 L800 900" />
+  <text class="label" x="818" y="892">Có / Yes</text>
+
+  <path class="line" d="M660 970 L580 970 L580 1105" />
+  <text class="label" x="670" y="954">Có / Yes</text>
+
+  <path class="line" d="M940 970 L1020 1105" />
+  <text class="label" x="946" y="954">Không / No</text>
+
+  <path class="line" d="M400 1150 L400 1219 L610 1219" />
+  <path class="line" d="M1200 1150 L1200 1219 L990 1219" />
+
+  <path class="line" d="M990 1219 L1120 1219" />
+  <path class="line" d="M800 1262 L800 1288" />
+
+  <path class="line" d="M560 1325 L460 1325 L460 223 L610 223" />
+  <text class="label" x="468" y="1308">Lặp / Loop</text>
+
+  <path class="line" d="M780 1362 L780 1376" />
+</svg>

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1220" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ hệ thống khóa cửa / Smart Door Lock System</title>
+  <desc id="desc">Luồng điều khiển khóa cửa bằng servo SG90 qua endpoint lock và ánh xạ open-close.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1500" height="1220" />
+
+  <text class="title" x="750" y="46" text-anchor="middle">Sơ đồ hệ thống khóa cửa / Smart Door Lock System</text>
+  <text class="subtitle" x="750" y="74" text-anchor="middle">Servo SG90 on GPIO13 with /lock?state=open|close and lock-unlock alias</text>
+
+  <rect class="terminator-start" x="590" y="90" width="320" height="58" rx="29" ry="29" />
+  <text class="txt" x="750" y="124">Bắt đầu khóa cửa</text>
+  <text class="sub" x="750" y="142">Start Door Lock Flow</text>
+
+  <polygon class="io" points="560,180 940,180 900,258 520,258" />
+  <text class="txt" x="730" y="215">Nhận lệnh lock/open/close/unlock</text>
+  <text class="sub" x="730" y="234">Input from /api/v1/control or /api/v1/voice-command</text>
+
+  <rect class="process" x="560" y="290" width="380" height="86" rx="10" />
+  <text class="txt" x="750" y="322">Chuẩn hóa action</text>
+  <text class="sub" x="750" y="341">lock->close, unlock->open</text>
+
+  <polygon class="decision" points="750,402 890,472 750,542 610,472" />
+  <text class="txt" x="750" y="469">State open/close hợp lệ?</text>
+  <text class="sub" x="750" y="488">Valid Lock State?</text>
+
+  <polygon class="decision" points="750,566 890,636 750,706 610,636" />
+  <text class="txt" x="750" y="633">Action = open?</text>
+  <text class="sub" x="750" y="652">Mở cửa?</text>
+
+  <rect class="process" x="180" y="736" width="360" height="90" rx="10" />
+  <text class="txt" x="360" y="768">Servo.write(0°)</text>
+  <text class="sub" x="360" y="787">DOOR_OPEN_ANGLE = 0</text>
+  <text class="sub" x="360" y="806">doorOpen = true</text>
+
+  <rect class="process" x="960" y="736" width="360" height="90" rx="10" />
+  <text class="txt" x="1140" y="768">Servo.write(90°)</text>
+  <text class="sub" x="1140" y="787">DOOR_CLOSE_ANGLE = 90</text>
+  <text class="sub" x="1140" y="806">doorOpen = false</text>
+
+  <rect class="process" x="560" y="852" width="380" height="86" rx="10" />
+  <text class="txt" x="750" y="884">Trả JSON thành công</text>
+  <text class="sub" x="750" y="903">{"ok":true,"device":"lock","state":"open|close"}</text>
+
+  <ellipse class="db-top" cx="1160" cy="876" rx="130" ry="20" />
+  <rect class="db-body" x="1030" y="876" width="260" height="82" />
+  <ellipse class="db-top" cx="1160" cy="958" rx="130" ry="20" />
+  <text class="txt" x="1160" y="907">Kho trạng thái</text>
+  <text class="sub" x="1160" y="926">door: open|close</text>
+
+  <polygon class="io" points="550,968 950,968 910,1044 510,1044" />
+  <text class="txt" x="730" y="1001">Hiển thị trạng thái lên dashboard</text>
+  <text class="sub" x="730" y="1020">Output lock state to Web UI</text>
+
+  <rect class="terminator-end" x="590" y="1060" width="320" height="56" rx="28" ry="28" />
+  <text class="txt" x="750" y="1093">Kết thúc thành công / Success End</text>
+
+  <rect class="terminator-end" x="40" y="1038" width="360" height="62" rx="31" ry="31" />
+  <text class="txt" x="220" y="1074">Kết thúc lỗi / Error End</text>
+
+  <path class="line" d="M750 148 L750 180" />
+  <path class="line" d="M730 258 L730 290" />
+  <path class="line" d="M750 376 L750 402" />
+
+  <path class="line" d="M610 472 L220 472 L220 1038" />
+  <text class="label" x="620" y="455">Không / No</text>
+
+  <path class="line" d="M750 542 L750 566" />
+  <text class="label" x="768" y="556">Có / Yes</text>
+
+  <path class="line" d="M610 636 L540 636 L540 781" />
+  <text class="label" x="620" y="620">Có / Yes</text>
+
+  <path class="line" d="M890 636 L960 781" />
+  <text class="label" x="896" y="620">Không / No</text>
+
+  <path class="line" d="M360 826 L360 895 L560 895" />
+  <path class="line" d="M1140 826 L1140 895 L940 895" />
+
+  <path class="line" d="M940 895 L1030 895" />
+  <path class="line" d="M750 938 L750 968" />
+  <path class="line" d="M730 1044 L730 1060" />
+</svg>

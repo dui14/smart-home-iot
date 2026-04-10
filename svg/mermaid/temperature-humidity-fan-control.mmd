@@ -1,0 +1,12 @@
+﻿flowchart TD
+    A([Bat dau])
+    B[Khoi tao cam bien nhiet do]
+    C{Nhiet do >= 35C?}
+    D[Bat quat]
+    E[Tat quat]
+    Z([Ket thuc])
+
+    A --> B --> C
+    C -- Dung --> D --> Z
+    C -- Sai --> E --> Z
+

@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ mạch nối dây chân cắm / Wiring Pinout Diagram</title>
+  <desc id="desc">Sơ đồ pinout chi tiết giữa ESP32 và các module: DHT22, LDR, LCD I2C, servo, relay đèn và relay quạt.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 30px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .txt { font: 600 15px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .sub { font: 500 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; text-anchor: middle; }
+      .mono { font: 600 14px 'Consolas', 'Courier New', monospace; fill: #0f172a; }
+      .label { font: 700 13px 'Segoe UI', Tahoma, sans-serif; fill: #1e293b; }
+      .terminator-start { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+      .terminator-end { fill: #fee2e2; stroke: #dc2626; stroke-width: 2.5; }
+      .process { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2.5; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .io { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.5; }
+      .db-top { fill: #bfdbfe; stroke: #1e40af; stroke-width: 2.5; }
+      .db-body { fill: #dbeafe; stroke: #1e40af; stroke-width: 2.5; }
+      .line { stroke: #334155; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1200" />
+
+  <text class="title" x="850" y="46" text-anchor="middle">Sơ đồ mạch nối dây chân cắm / Wiring Pinout Diagram</text>
+  <text class="subtitle" x="850" y="74" text-anchor="middle">ESP32 GPIO Mapping from src/main.cpp and diagram.json</text>
+
+  <rect class="terminator-start" x="680" y="92" width="340" height="60" rx="30" ry="30" />
+  <text class="txt" x="850" y="128">Bắt đầu đấu dây</text>
+  <text class="sub" x="850" y="147">Start Wiring</text>
+
+  <ellipse class="db-top" cx="280" cy="132" rx="170" ry="22" />
+  <rect class="db-body" x="110" y="132" width="340" height="92" />
+  <ellipse class="db-top" cx="280" cy="224" rx="170" ry="22" />
+  <text class="txt" x="280" y="170">Nguồn mapping</text>
+  <text class="sub" x="280" y="189">Pin Source: main.cpp + diagram.json</text>
+
+  <rect class="process" x="650" y="188" width="400" height="70" rx="10" />
+  <text class="txt" x="850" y="219">Đọc bảng GPIO và thiết bị</text>
+  <text class="sub" x="850" y="238">Read GPIO and Device List</text>
+
+  <polygon class="decision" points="850,286 990,356 850,426 710,356" />
+  <text class="txt" x="850" y="353">Đúng chân GPIO?</text>
+  <text class="sub" x="850" y="372">Correct GPIO?</text>
+
+  <rect class="process" x="1180" y="320" width="330" height="72" rx="10" />
+  <text class="txt" x="1345" y="351">Tháo và cắm lại dây</text>
+  <text class="sub" x="1345" y="370">Rewire Incorrect Pins</text>
+
+  <polygon class="io" points="690,458 1030,458 990,538 650,538" />
+  <text class="txt" x="840" y="494">Thực hiện đấu nối phần cứng</text>
+  <text class="sub" x="840" y="513">Apply Physical Wiring</text>
+
+  <rect class="process" x="120" y="566" width="680" height="560" rx="12" />
+  <text class="txt" x="460" y="600">Bảng chân ESP32 / ESP32 Pin Matrix</text>
+
+  <text class="mono" x="160" y="644">D13  -> Servo PWM (Khoá cửa / Door Lock)</text>
+  <text class="mono" x="160" y="682">D15  -> DHT22 DATA</text>
+  <text class="mono" x="160" y="720">D21  -> LCD SDA (I2C)</text>
+  <text class="mono" x="160" y="758">D22  -> LCD SCL (I2C)</text>
+  <text class="mono" x="160" y="796">D34  -> LDR DO (Digital Light Level)</text>
+  <text class="mono" x="160" y="834">D18  -> Relay1 IN (LED1 Living)</text>
+  <text class="mono" x="160" y="872">D19  -> Relay2 IN (LED2 Bedroom)</text>
+  <text class="mono" x="160" y="910">D16  -> Relay3 IN (Auto Light)</text>
+  <text class="mono" x="160" y="948">D26  -> RelayFan IN (Quạt / Fan)</text>
+  <text class="mono" x="160" y="986">VIN  -> Servo V+, Relay VCC, LCD VCC</text>
+  <text class="mono" x="160" y="1024">3V3  -> DHT22 VCC, LDR VCC</text>
+  <text class="mono" x="160" y="1062">GND  -> Common Ground (Mass chung)</text>
+
+  <rect class="process" x="920" y="560" width="300" height="88" rx="10" />
+  <text class="txt" x="1070" y="593">DHT22</text>
+  <text class="sub" x="1070" y="612">VCC 3V3, DATA D15, GND</text>
+
+  <rect class="process" x="920" y="670" width="300" height="88" rx="10" />
+  <text class="txt" x="1070" y="703">LDR Module</text>
+  <text class="sub" x="1070" y="722">VCC 3V3, DO D34, GND</text>
+
+  <rect class="process" x="920" y="780" width="300" height="88" rx="10" />
+  <text class="txt" x="1070" y="813">LCD 16x2 I2C</text>
+  <text class="sub" x="1070" y="832">SDA D21, SCL D22, VIN, GND</text>
+
+  <rect class="process" x="920" y="890" width="300" height="88" rx="10" />
+  <text class="txt" x="1070" y="923">Servo SG90</text>
+  <text class="sub" x="1070" y="942">PWM D13, VIN, GND</text>
+
+  <rect class="process" x="1260" y="560" width="320" height="170" rx="10" />
+  <text class="txt" x="1420" y="594">Relay cụm đèn</text>
+  <text class="sub" x="1420" y="613">Lighting Relay Group</text>
+  <text class="sub" x="1420" y="640">Relay1 IN D18 -> LED1</text>
+  <text class="sub" x="1420" y="664">Relay2 IN D19 -> LED2</text>
+  <text class="sub" x="1420" y="688">Relay3 IN D16 -> LED Auto</text>
+
+  <rect class="process" x="1260" y="760" width="320" height="96" rx="10" />
+  <text class="txt" x="1420" y="794">Relay quạt nhiệt</text>
+  <text class="sub" x="1420" y="813">Fan Relay IN D26 -> Fan 5V</text>
+  <text class="sub" x="1420" y="832">ON if Temp >= 35C</text>
+
+  <rect class="process" x="1260" y="886" width="320" height="110" rx="10" />
+  <text class="txt" x="1420" y="922">Nguồn cấp và mass chung</text>
+  <text class="sub" x="1420" y="941">Power Rail and Common Ground</text>
+  <text class="sub" x="1420" y="964">VIN / 3V3 / GND Distribution</text>
+
+  <rect class="terminator-end" x="680" y="1126" width="340" height="56" rx="28" ry="28" />
+  <text class="txt" x="850" y="1160">Kết thúc đấu dây / Wiring Complete</text>
+
+  <path class="line" d="M680 122 L450 122" />
+  <path class="line" d="M850 152 L850 188" />
+  <path class="line" d="M850 258 L850 286" />
+
+  <path class="line" d="M990 356 L1180 356" />
+  <text class="label" x="1002" y="344">Không / No</text>
+
+  <path class="line" d="M1345 320 L1345 286 L950 286" />
+
+  <path class="line" d="M850 426 L850 458" />
+  <text class="label" x="868" y="444">Có / Yes</text>
+
+  <path class="line" d="M840 538 L840 566 L800 566" />
+  <path class="line" d="M800 640 L920 604" />
+  <path class="line" d="M800 700 L920 714" />
+  <path class="line" d="M800 760 L920 824" />
+  <path class="line" d="M800 820 L920 934" />
+  <path class="line" d="M800 860 L1260 620" />
+  <path class="line" d="M800 920 L1260 808" />
+  <path class="line" d="M800 1000 L1260 942" />
+
+  <path class="line" d="M850 1126 L850 1126" />
+</svg>

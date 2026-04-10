@@ -1,0 +1,14 @@
+﻿flowchart TD
+    A([Bat dau])
+    B[Nguoi dung gui lenh]
+    C{Lenh la AI?}
+    D[Server xu ly truc tiep]
+    E[AI phan tich lenh]
+    F[Gui lenh toi ESP32]
+    G[Cap nhat dashboard]
+    Z([Ket thuc])
+
+    A --> B --> C
+    C -- Dung --> E --> F --> G --> Z
+    C -- Sai --> D --> F --> G --> Z
+
