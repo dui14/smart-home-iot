@@ -40,6 +40,13 @@ class DeviceClient {
       };
     }
 
+    if (command.device === "fan") {
+      return {
+        path: "/fan",
+        params: { state: command.action }
+      };
+    }
+
     throw new HttpError(400, "ERR_DEVICE_NOT_FOUND", "Device is not supported");
   }
 

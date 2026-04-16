@@ -20,6 +20,9 @@ function detectDevice(raw) {
   if (containsAny(raw, ["den", "đèn", "light", "lamp"])) {
     return "light";
   }
+  if (containsAny(raw, ["quat", "quạt", "fan", "ventilator"])) {
+    return "fan";
+  }
   if (containsAny(raw, ["cua", "cửa", "khoa", "khóa", "lock", "door"])) {
     return "lock";
   }

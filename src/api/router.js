@@ -23,6 +23,33 @@ const aiSchema = z.object({
   timestamp: z.string().optional()
 });
 
+const aiParseSchema = z.object({
+  request_id: z.string().min(1),
+  source: z.string().min(1),
+  user_text: z.string().min(1),
+  input_type: z.enum(["text", "voice"]).default("text"),
+  context: z.record(z.any()).optional(),
+  timestamp: z.string().optional()
+});
+
+const aiExecuteSchema = z.object({
+  request_id: z.string().min(1),
+  source: z.string().min(1),
+  user_text: z.string().min(1),
+  input_type: z.enum(["text", "voice"]).default("text"),
+  context: z.record(z.any()).optional(),
+  timestamp: z.string().optional()
+});
+
+const aiAssistantSchema = z.object({
+  request_id: z.string().min(1),
+  source: z.string().min(1),
+  user_text: z.string().min(1),
+  input_type: z.enum(["text", "voice"]).default("text"),
+  context: z.record(z.any()).optional(),
+  timestamp: z.string().optional()
+});
+
 const voiceSchema = z.object({
   request_id: z.string().min(1),
   source: z.string().min(1).default("voice-web"),
@@ -30,6 +57,64 @@ const voiceSchema = z.object({
   context: z.record(z.any()).optional(),
   timestamp: z.string().optional()
 });
+
+function toCommandData(command) {
+  return {
+    device: command.device,
+    room: command.room,
+    action: command.action
+  };
+}
+
+function toValidationResult(validation) {
+  if (validation.ok) {
+    return { ok: true };
+  }
+  return {
+    ok: false,
+    code: validation.code,
+    message: validation.message
+  };
+}
+
+function toExecuteData({ result, inputType, userText, includeLegacyText }) {
+  const commandData = toCommandData(result.command);
+  const data = {
+    input_type: inputType,
+    user_text: userText,
+    parsed_command: commandData,
+    parsed_commands: [commandData],
+    validation_result: { ok: true },
+    confidence: result.confidence,
+    parser: result.parser,
+    requires_confirmation: result.requiresConfirmation,
+    execution_status: "success",
+    execution: "success",
+    resulting_state: result.state
+  };
+
+  if (includeLegacyText) {
+    data.text = userText;
+  }
+
+  return data;
+}
+
+function toAssistantData({ result, inputType, userText }) {
+  const parsedCommands = (Array.isArray(result.commands) ? result.commands : []).map((command) => toCommandData(command));
+  return {
+    input_type: inputType,
+    user_text: userText,
+    intent: result.intent,
+    assistant_text: result.assistantText,
+    parsed_command: parsedCommands[0] || null,
+    parsed_commands: parsedCommands,
+    execution_status: result.executionStatus,
+    error_code: result.errorCode || null,
+    parser: result.parser,
+    resulting_state: result.state
+  };
+}
 
 function createRouter({ commandService }) {
   const router = express.Router();
@@ -74,16 +159,105 @@ function createRouter({ commandService }) {
           code: "OK_AI_COMMAND_EXECUTED",
           message: "AI command parsed and executed",
           traceId,
+          data: toExecuteData({
+            result,
+            inputType: "text",
+            userText: payload.text,
+            includeLegacyText: false
+          })
+        })
+      );
+    } catch (error) {
+      next({ error, traceId });
+    }
+  });
+
+  router.post("/ai/parse-only", async (req, res, next) => {
+    const traceId = createTraceId("trace_ai_parse");
+    try {
+      const payload = aiParseSchema.parse(req.body);
+      const result = await commandService.aiParse({
+        request_id: payload.request_id,
+        source: payload.source,
+        text: payload.user_text,
+        context: payload.context,
+        timestamp: payload.timestamp
+      });
+
+      res.status(200).json(
+        ok({
+          code: "OK_AI_COMMAND_PARSED",
+          message: "AI command parsed",
+          traceId,
           data: {
-            parsed_commands: [
-              {
-                device: result.command.device,
-                room: result.command.room,
-                action: result.command.action
-              }
-            ],
-            execution: "success"
+            input_type: payload.input_type,
+            user_text: payload.user_text,
+            parsed_command: result.parsed,
+            validation_result: toValidationResult(result.validation),
+            confidence: result.confidence,
+            parser: result.parser,
+            requires_confirmation: result.requiresConfirmation
           }
+        })
+      );
+    } catch (error) {
+      next({ error, traceId });
+    }
+  });
+
+  router.post("/ai/parse-and-execute", async (req, res, next) => {
+    const traceId = createTraceId("trace_ai_exec");
+    try {
+      const payload = aiExecuteSchema.parse(req.body);
+      const result = await commandService.aiControl({
+        request_id: payload.request_id,
+        source: payload.source,
+        text: payload.user_text,
+        context: payload.context,
+        timestamp: payload.timestamp
+      });
+
+      res.status(200).json(
+        ok({
+          code: "OK_AI_COMMAND_EXECUTED",
+          message: "AI command parsed and executed",
+          traceId,
+          data: toExecuteData({
+            result,
+            inputType: payload.input_type,
+            userText: payload.user_text,
+            includeLegacyText: false
+          })
+        })
+      );
+    } catch (error) {
+      next({ error, traceId });
+    }
+  });
+
+  router.post("/ai/assistant", async (req, res, next) => {
+    const traceId = createTraceId("trace_ai_asst");
+    try {
+      const payload = aiAssistantSchema.parse(req.body);
+      const result = await commandService.aiAssistant({
+        request_id: payload.request_id,
+        source: payload.source,
+        text: payload.user_text,
+        inputType: payload.input_type,
+        context: payload.context,
+        timestamp: payload.timestamp
+      });
+
+      res.status(200).json(
+        ok({
+          code: "OK_AI_ASSISTANT_RESPONDED",
+          message: "AI assistant response generated",
+          traceId,
+          data: toAssistantData({
+            result,
+            inputType: payload.input_type,
+            userText: payload.user_text
+          })
         })
       );
     } catch (error) {
@@ -108,17 +282,12 @@ function createRouter({ commandService }) {
           code: "OK_VOICE_COMMAND_EXECUTED",
           message: "Voice command parsed and executed",
           traceId,
-          data: {
-            text: payload.transcript,
-            parsed_commands: [
-              {
-                device: result.command.device,
-                room: result.command.room,
-                action: result.command.action
-              }
-            ],
-            execution: "success"
-          }
+          data: toExecuteData({
+            result,
+            inputType: "voice",
+            userText: payload.transcript,
+            includeLegacyText: true
+          })
         })
       );
     } catch (error) {

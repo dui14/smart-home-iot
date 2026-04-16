@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "author": "SmartHome ESP32 + 2 Relay + 2 LED Load",
+  "author": "SmartHome ESP32 - LDR Auto Relay3",
   "editor": "wokwi",
   "parts": [
     { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
@@ -63,13 +63,6 @@
       "attrs": { "pins": "i2c", "i2cAddress": "0x27" }
     },
     {
-      "type": "wokwi-photoresistor-sensor",
-      "id": "ldr",
-      "top": 274.6,
-      "left": -16.8,
-      "attrs": { "lux": "200", "threshold": "1.8" }
-    },
-    {
       "type": "wokwi-relay-module",
       "id": "relay3",
       "top": -179.8,
@@ -91,19 +84,20 @@
       "attrs": { "value": "220" }
     },
     {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr",
+      "top": -342.4,
+      "left": -229.6,
+      "attrs": {}
+    },
+    {
       "type": "wokwi-relay-module",
       "id": "relayFan",
       "top": 308,
       "left": 192,
       "attrs": { "transistor": "pnp" }
     },
-    {
-      "type": "wokwi-buzzer",
-      "id": "fan5v",
-      "top": 303.6,
-      "left": 468,
-      "attrs": {}
-    }
+    { "type": "wokwi-buzzer", "id": "fan5v", "top": 303.6, "left": 468, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -117,14 +111,14 @@
     [ "relay1:COM", "esp:VIN", "red", [] ],
     [ "relay1:NO", "rLoad1:1", "green", [] ],
     [ "rLoad1:2", "led1:A", "green", [] ],
-    [ "led1:C", "esp:GND.1", "black", [ "v-9.6", "h-335.6", "v158.6" ] ],
+    [ "led1:C", "esp:GND.1", "black", [] ],
     [ "relay2:VCC", "esp:VIN", "red", [] ],
     [ "relay2:GND", "esp:GND.1", "black", [] ],
     [ "relay2:IN", "esp:D19", "green", [] ],
     [ "relay2:COM", "esp:VIN", "red", [] ],
     [ "relay2:NO", "rLoad2:1", "green", [] ],
     [ "rLoad2:2", "led2:A", "green", [] ],
-    [ "led2:C", "esp:GND.1", "black", [ "h-28.4", "v-9.6", "h-359.5" ] ],
+    [ "led2:C", "esp:GND.1", "black", [] ],
     [ "dht:VCC", "esp:3V3", "red", [] ],
     [ "dht:GND", "esp:GND.1", "black", [] ],
     [ "dht:SDA", "esp:D15", "green", [] ],
@@ -134,22 +128,22 @@
     [ "lcd:GND", "esp:GND.1", "black", [] ],
     [ "lcd:SDA", "esp:D21", "green", [] ],
     [ "lcd:SCL", "esp:D22", "green", [] ],
-    [ "ldr:VCC", "esp:3V3", "red", [] ],
-    [ "ldr:GND", "esp:GND.1", "black", [] ],
-    [ "ldr:DO", "esp:D34", "yellow", [] ],
     [ "relay3:VCC", "esp:VIN", "red", [] ],
     [ "relay3:GND", "esp:GND.1", "black", [] ],
-    [ "relay3:IN", "esp:D16", "green", [] ],
+    [ "relay3:IN", "esp:D23", "green", [ "h-67.2", "v165.4" ] ],
     [ "relay3:COM", "esp:VIN", "red", [] ],
     [ "relay3:NO", "rLoad3:1", "green", [] ],
     [ "rLoad3:2", "led3:A", "green", [] ],
     [ "led3:C", "esp:GND.1", "black", [] ],
-    [ "relayFan:VCC", "esp:VIN", "red", [] ],
+    [ "ldr:VCC", "esp:3V3", "red", [] ],
+    [ "ldr:GND", "esp:GND.1", "black", [ "h192", "v465.4" ] ],
+    [ "ldr:DO", "esp:D34", "green", [ "h19.2", "v359.7" ] ],
+    [ "relayFan:VCC", "esp:VIN", "purple", [ "h-220.8", "v-163.8", "h33.8" ] ],
     [ "relayFan:GND", "esp:GND.1", "black", [] ],
     [ "relayFan:IN", "esp:D26", "green", [] ],
-    [ "relayFan:COM", "esp:VIN", "red", [] ],
+    [ "relayFan:COM", "esp:VIN", "red", [ "v-30.8", "h-354", "v-148.7" ] ],
     [ "relayFan:NO", "fan5v:2", "green", [] ],
-    [ "fan5v:1", "esp:GND.1", "black", [] ]
+    [ "fan5v:1", "esp:GND.1", "black", [ "h-399", "v-238.6" ] ]
   ],
   "serialMonitor": { "display": "always", "newline": "lf" },
   "dependencies": {}

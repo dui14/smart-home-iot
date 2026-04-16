@@ -7,6 +7,20 @@ function toNumber(value, fallback) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function normalizeProvider(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) {
+    return "openrouter";
+  }
+  if (raw.includes("gemini") || raw === "google") {
+    return "gemini";
+  }
+  if (raw.includes("openrouter") || raw.includes("open_router")) {
+    return "openrouter";
+  }
+  return "openrouter";
+}
+
 const env = {
   port: toNumber(process.env.PORT, 3000),
   esp32BaseUrl: process.env.ESP32_BASE_URL || "http://127.0.0.1:8080",
@@ -21,11 +35,16 @@ const env = {
   dbMaxPool: toNumber(process.env.DB_MAX_POOL, 10),
   dbIdleTimeoutMs: toNumber(process.env.DB_IDLE_TIMEOUT_MS, 30000),
   databaseUrl: process.env.DATABASE_URL || "",
+  aiProvider: normalizeProvider(process.env.AI_PROVIDER || "openrouter"),
   openRouterApiKey: process.env.OPENROUTER_API_KEY || "",
   openRouterModel: process.env.OPENROUTER_MODEL || "deepseek/deepseek-chat-v3-0324:free",
+  openRouterChatModel: process.env.OPENROUTER_CHAT_MODEL || process.env.OPENROUTER_MODEL || "deepseek/deepseek-chat-v3-0324:free",
   openRouterTimeoutMs: toNumber(process.env.OPENROUTER_TIMEOUT_MS, 8000),
   openRouterSiteUrl: process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
-  openRouterSiteName: process.env.OPENROUTER_SITE_NAME || "SmartHomeVoiceControl"
+  openRouterSiteName: process.env.OPENROUTER_SITE_NAME || "SmartHomeVoiceControl",
+  geminiApiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_KEY || "",
+  geminiModel: process.env.GEMINI_MODEL || "gemini-3-flash",
+  geminiTimeoutMs: toNumber(process.env.GEMINI_TIMEOUT_MS, 10000)
 };
 
 module.exports = { env };

@@ -10,8 +10,14 @@ const DEVICE_CATALOG = {
   ac: {
     actions: ["on", "off"],
     rooms: ["living", "bedroom", "living_room", "bed_room"]
+  },
+  fan: {
+    actions: ["on", "off"],
+    rooms: []
   }
 };
+
+const DEVICES_WITHOUT_ROOM = new Set(["lock", "fan"]);
 
 const ROOM_ALIAS = {
   living_room: "living",
@@ -56,15 +62,19 @@ function validateCommand({ device, room, action }) {
     return { ok: false, code: "ERR_UNSUPPORTED_ACTION", message: "Action is not supported for this device" };
   }
 
-  if (normalizedDevice !== "lock" && !spec.rooms.includes(normalizedRoom)) {
+  if (!DEVICES_WITHOUT_ROOM.has(normalizedDevice) && !spec.rooms.includes(normalizedRoom)) {
     return { ok: false, code: "ERR_INVALID_PAYLOAD", message: "Room is not supported" };
   }
+
+  const resolvedRoom = normalizedDevice === "lock"
+    ? "main_door"
+    : (DEVICES_WITHOUT_ROOM.has(normalizedDevice) ? "" : normalizedRoom);
 
   return {
     ok: true,
     value: {
       device: normalizedDevice,
-      room: normalizedDevice === "lock" ? "main_door" : normalizedRoom,
+      room: resolvedRoom,
       action: normalizedAction
     }
   };

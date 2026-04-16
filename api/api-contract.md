@@ -37,12 +37,12 @@ Field bat buoc:
 1. `request_id`
 2. `source`
 3. `mode`: `manual` | `auto`
-4. `device`: `light` | `lock` | `ac`
+4. `device`: `light` | `lock` | `ac` | `fan`
 5. `action`
 6. `timestamp`
 
 Field tuy chon:
-1. `room`: bat buoc voi `light`
+1. `room`: bat buoc voi `light` va `ac`
 2. `params`: cho mo rong trong tuong lai
 
 ## 4) Response format chuan
@@ -93,15 +93,16 @@ Field bat buoc:
 1. `OK_COMMAND_APPLIED`
 2. `OK_STATUS_FETCHED`
 3. `OK_AI_COMMAND_EXECUTED`
-4. `ERR_INVALID_PAYLOAD`
-5. `ERR_UNSUPPORTED_DEVICE`
-6. `ERR_UNSUPPORTED_ACTION`
-7. `ERR_MODE_CONFLICT`
-8. `ERR_DEVICE_UNREACHABLE`
-9. `ERR_DEVICE_TIMEOUT`
-10. `ERR_AI_PARSE_FAILED`
-11. `ERR_AI_TIMEOUT`
-12. `ERR_INTERNAL`
+4. `OK_AI_ASSISTANT_RESPONDED`
+5. `ERR_INVALID_PAYLOAD`
+6. `ERR_UNSUPPORTED_DEVICE`
+7. `ERR_UNSUPPORTED_ACTION`
+8. `ERR_MODE_CONFLICT`
+9. `ERR_DEVICE_UNREACHABLE`
+10. `ERR_DEVICE_TIMEOUT`
+11. `ERR_AI_PARSE_FAILED`
+12. `ERR_AI_TIMEOUT`
+13. `ERR_INTERNAL`
 
 ### 5.3 Map HTTP status
 1. `200`: thanh cong
@@ -117,7 +118,8 @@ Field bat buoc:
 ### 6.1 Dashboard -> Server
 1. Timeout client: 5s
 2. Retry: 1 lan voi `GET /status`
-3. Khong retry tu dong voi `POST /control` va `POST /ai-command` neu khong co `request_id`
+3. Khong retry tu dong voi `POST /control`, `POST /ai/parse-and-execute`, `POST /ai-command`, `POST /voice-command` neu khong co `request_id`
+4. `POST /ai/assistant` la endpoint hoi thoai thong minh: co the chat-only hoac parse-va-execute tuy intent.
 
 ### 6.2 Server -> ESP32
 1. Timeout moi request: 1500ms
@@ -126,6 +128,7 @@ Field bat buoc:
 4. Chi retry cho lenh idempotent:
 	 - `light on/off`
 	 - `ac on/off`
+	 - `fan on/off`
 	 - `status/sensor read`
 5. Khong retry `lock open/close` neu khong co xac nhan trang thai sau moi lan thu
 
@@ -138,17 +141,23 @@ Field bat buoc:
 1. `light` bat buoc co `room`
 2. `lock` khong dung `room`
 3. `ac` action hop le: `on`, `off`
-4. `lock` action hop le: `open`, `close`
-5. `light` action hop le: `on`, `off`
-6. Neu mode `auto`, lenh manual chi duoc phep khi co `override=true`
+4. `fan` action hop le: `on`, `off`
+5. `lock` action hop le: `open`, `close`
+6. `light` action hop le: `on`, `off`
+7. Neu mode `auto`, lenh manual chi duoc phep khi co `override=true`
 
 ## 8) Danh muc endpoint chinh
 1. Server API:
 	 - `POST /control`
-	 - `POST /ai-command`
+	 - `POST /ai/assistant`
+	 - `POST /ai/parse-only`
+	 - `POST /ai/parse-and-execute`
+	 - `POST /ai-command` (legacy)
+	 - `POST /voice-command` (legacy)
 	 - `GET /status`
 2. ESP32 API:
 	 - `GET /light?room=living&state=on`
 	 - `GET /lock?state=open`
 	 - `GET /ac?state=on`
+	 - `GET /fan?state=on`
 	 - `GET /sensor`

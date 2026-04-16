@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Home Voice Control</title>
+    <title>Điều Khiển Nhà Thông Minh</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,84 +14,87 @@
   </head>
   <body>
     <div class="ambient"></div>
-    <div class="language-switch" id="language-switch" role="group" aria-label="Language switch">
+    <div class="language-switch" id="language-switch" role="group" aria-label="Chuyển ngôn ngữ">
       <button id="lang-vi" type="button" class="lang-btn is-active" data-lang="vi-VN">VI</button>
       <button id="lang-en" type="button" class="lang-btn" data-lang="en-US">EN</button>
     </div>
     <main class="app-shell">
       <header class="app-header">
-        <p class="eyebrow">Smart Home Control Center</p>
-        <h1>Dieu khien nha thong minh theo thoi gian thuc</h1>
-        <p class="subtitle">Dashboard dieu khien den cua, xem nhiet do tu ESP32 va tab AI quan ly lich su hoi thoai lenh.</p>
+        <p class="eyebrow" data-i18n="headerEyebrow">Trung tâm điều khiển nhà thông minh</p>
+        <h1 data-i18n="headerTitle">Điều khiển nhà thông minh theo thời gian thực</h1>
+        <p class="subtitle" data-i18n="headerSubtitle">Bảng điều khiển đèn, cửa và cảm biến từ ESP32 với trợ lý AI hội thoại.</p>
       </header>
 
       <section class="tabs">
-        <button class="tab-btn is-active" data-tab="dashboard">Dashboard</button>
-        <button class="tab-btn" data-tab="ai">AI Assistant</button>
+        <button class="tab-btn is-active" data-tab="dashboard" data-i18n="tabDashboard">Bảng điều khiển</button>
+        <button class="tab-btn" data-tab="ai" data-i18n="tabAi">Trợ lý AI</button>
       </section>
 
       <section class="tab-panel is-active" id="tab-dashboard">
         <div class="dashboard-grid">
           <article class="card metric-card">
-            <h2>Temperature Index</h2>
+            <h2 data-i18n="metricTitle">Chỉ số nhiệt độ</h2>
             <p class="metric-value"><span id="temperature-value">--</span><span class="metric-unit"> C</span></p>
             <p class="metric-value"><span id="humidity-value">--</span><span class="metric-unit"> %</span></p>
-            <p id="sensor-time" class="muted">Dang cho du lieu ESP32</p>
+            <p id="sensor-time" class="muted" data-i18n="sensorWaiting">Đang chờ dữ liệu ESP32</p>
           </article>
 
           <article class="card quick-card">
-            <h2>Quick Control</h2>
+            <h2 data-i18n="quickTitle">Điều khiển nhanh</h2>
             <div class="quick-actions">
-              <button class="btn quick-btn" data-device="light" data-room="living" data-action="on">Bat den phong khach</button>
-              <button class="btn quick-btn btn-ghost" data-device="light" data-room="living" data-action="off">Tat den phong khach</button>
-              <button class="btn quick-btn" data-device="light" data-room="bedroom" data-action="on">Bat den phong ngu</button>
-              <button class="btn quick-btn btn-ghost" data-device="light" data-room="bedroom" data-action="off">Tat den phong ngu</button>
-              <button class="btn quick-btn" data-device="lock" data-action="open">Mo cua chinh</button>
-              <button class="btn quick-btn btn-ghost" data-device="lock" data-action="close">Dong cua chinh</button>
+              <button class="btn quick-btn" data-device="light" data-room="living" data-action="on" data-i18n="quickLivingOn">Bật đèn phòng khách</button>
+              <button class="btn quick-btn btn-ghost" data-device="light" data-room="living" data-action="off" data-i18n="quickLivingOff">Tắt đèn phòng khách</button>
+              <button class="btn quick-btn" data-device="light" data-room="bedroom" data-action="on" data-i18n="quickBedroomOn">Bật đèn phòng ngủ</button>
+              <button class="btn quick-btn btn-ghost" data-device="light" data-room="bedroom" data-action="off" data-i18n="quickBedroomOff">Tắt đèn phòng ngủ</button>
+              <button class="btn quick-btn" data-device="fan" data-action="on" data-i18n="quickFanOn">Bật quạt</button>
+              <button class="btn quick-btn btn-ghost" data-device="fan" data-action="off" data-i18n="quickFanOff">Tắt quạt</button>
+              <button class="btn quick-btn" data-device="lock" data-action="open" data-i18n="quickLockOpen">Mở cửa chính</button>
+              <button class="btn quick-btn btn-ghost" data-device="lock" data-action="close" data-i18n="quickLockClose">Đóng cửa chính</button>
             </div>
           </article>
 
           <article class="card controls">
-            <h2>Manual Command</h2>
+            <h2 data-i18n="manualTitle">Lệnh thủ công</h2>
             <div class="grid">
               <label>
-                Device
+                <span data-i18n="manualDeviceLabel">Thiết bị</span>
                 <select id="device">
-                  <option value="light">Light</option>
-                  <option value="lock">Lock</option>
-                  <option value="ac">AC</option>
+                  <option value="light" data-i18n="deviceLight">Đèn</option>
+                  <option value="lock" data-i18n="deviceLock">Khóa cửa</option>
+                  <option value="ac" data-i18n="deviceAc">Máy lạnh</option>
+                  <option value="fan" data-i18n="deviceFan">Quạt</option>
                 </select>
               </label>
               <label>
-                Room
+                <span data-i18n="manualRoomLabel">Phòng</span>
                 <select id="room">
-                  <option value="living">Living</option>
-                  <option value="bedroom">Bedroom</option>
+                  <option value="living" data-i18n="roomLiving">Phòng khách</option>
+                  <option value="bedroom" data-i18n="roomBedroom">Phòng ngủ</option>
                 </select>
               </label>
               <label>
-                Action
+                <span data-i18n="manualActionLabel">Hành động</span>
                 <select id="action">
-                  <option value="on">On</option>
-                  <option value="off">Off</option>
-                  <option value="open">Open</option>
-                  <option value="close">Close</option>
+                  <option value="on" data-i18n="actionOn">Bật</option>
+                  <option value="off" data-i18n="actionOff">Tắt</option>
+                  <option value="open" data-i18n="actionOpen">Mở</option>
+                  <option value="close" data-i18n="actionClose">Đóng</option>
                 </select>
               </label>
             </div>
-            <button id="manual-btn" class="btn">Gui lenh thu cong</button>
+            <button id="manual-btn" class="btn" data-i18n="manualSendBtn">Gửi lệnh thủ công</button>
           </article>
 
           <article class="card status">
             <div class="status-head">
-              <h2>Trang thai he thong</h2>
-              <button id="refresh-btn" class="btn btn-ghost">Lam moi</button>
+              <h2 data-i18n="statusTitle">Trạng thái hệ thống</h2>
+              <button id="refresh-btn" class="btn btn-ghost" data-i18n="refreshBtn">Làm mới</button>
             </div>
-            <pre id="status-box">Dang tai...</pre>
+            <pre id="status-box">Đang tải...</pre>
           </article>
 
           <article class="card logs">
-            <h2>Nhat ky API</h2>
+            <h2 data-i18n="logsTitle">Nhật ký API</h2>
             <pre id="log-box"></pre>
           </article>
         </div>
@@ -101,17 +104,24 @@
         <div class="ai-layout">
           <aside class="card ai-history">
             <div class="status-head">
-              <h2>Lich su chat</h2>
-              <button id="new-chat-btn" class="btn btn-ghost">New</button>
+              <h2 data-i18n="historyTitle">Lịch sử chat</h2>
+              <button id="new-chat-btn" class="btn btn-ghost" data-i18n="newChatBtn">Mới</button>
             </div>
             <ul id="history-list" class="history-list"></ul>
           </aside>
 
           <section class="card ai-chat">
-            <h2>AI Command Console</h2>
-            <p class="hint">Bam micro de bat ghi am, bam lai de dung. Noi dung nhan duoc se tu dong dien vao o nhap de ban nhan Gui lenh AI.</p>
+            <h2 data-i18n="aiAssistantTitle">Trợ lý AI</h2>
+            <p class="hint" id="ai-hint" data-i18n="aiHint">Bấm micro để nói hoặc nhập lệnh trực tiếp rồi gửi.</p>
+            <div class="ai-provider-row">
+              <label for="ai-provider-select" data-i18n="providerLabel">Nhà cung cấp AI</label>
+              <select id="ai-provider-select" class="ai-provider-select">
+                <option value="openrouter" data-i18n="providerOpenrouter">OpenRouter</option>
+                <option value="gemini" data-i18n="providerGemini">Google Gemini</option>
+              </select>
+            </div>
             <div class="voice-row">
-              <button id="mic-btn" aria-label="Nút chép chính tả" title="Bat dau ghi am" type="button" class="composer-btn" data-state="idle">
+              <button id="mic-btn" aria-label="Nút ghi âm" title="Bắt đầu ghi âm" type="button" class="composer-btn" data-state="idle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3"></path>
                   <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -119,11 +129,11 @@
                   <line x1="8" y1="22" x2="16" y2="22"></line>
                 </svg>
               </button>
-              <span id="mic-status">Mic: san sang</span>
+              <span id="mic-status" data-i18n="micReady">Mic: sẵn sàng</span>
             </div>
-            <textarea id="voice-text" rows="3" placeholder="Nhap lenh AI..."></textarea>
+            <textarea id="voice-text" rows="3" placeholder="Nhập lệnh AI..." data-i18n-placeholder="aiInputPlaceholder"></textarea>
             <div class="ai-actions">
-              <button id="ai-btn" class="btn">Gui lenh AI</button>
+              <button id="ai-btn" class="btn" data-i18n="sendChatBtn">Gửi chat</button>
             </div>
             <div id="chat-log" class="chat-log"></div>
           </section>

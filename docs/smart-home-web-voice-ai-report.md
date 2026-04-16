@@ -19,7 +19,10 @@ Theo huong tach lop:
 Backend:
 - GET /api/v1/health
 - POST /api/v1/control
-- POST /api/v1/ai-command
+- POST /api/v1/ai/parse-only
+- POST /api/v1/ai/parse-and-execute
+- POST /api/v1/ai-command (legacy)
+- POST /api/v1/voice-command (legacy)
 - GET /api/v1/status
 - Validate payload bang zod
 - Error model thong nhat voi code va trace_id
@@ -49,7 +52,7 @@ Ket qua:
 Danh sach testcase:
 1. POST /api/v1/control thanh cong voi payload hop le
 2. POST /api/v1/control reject payload thieu truong
-3. POST /api/v1/ai-command tra ket qua dung contract
+3. POST /api/v1/ai/parse-and-execute tra ket qua dung contract
 4. GET /api/v1/status tra snapshot state
 
 ### 4.2 Runtime smoke test

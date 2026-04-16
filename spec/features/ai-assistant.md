@@ -5,13 +5,15 @@ AI Assistant nhan natural language command tu user, goi LLM de parse thanh JSON 
 
 ## 2) Scope
 - In scope:
+	- Assistant thinking router: phan loai `chat` hoac `device_control` truoc khi execute.
+	- Voice Chat auto-send khi ket thuc ghi am.
+	- Tach mode trong AI Assistant: Voice Chat va Manual Command.
 	- Parse-only va parse-and-execute flow.
 	- JSON schema validation cho command.
 	- Mapping command den lock/light/ac.
 	- Error reason minh bach cho dashboard.
 - Out of scope:
 	- Multi-turn memory dai han.
-	- Voice-to-text.
 	- Personalization theo user profile.
 
 ## 3) User Scenarios
@@ -22,6 +24,11 @@ AI Assistant nhan natural language command tu user, goi LLM de parse thanh JSON 
 
 ## 4) Input / Output
 ### Input
+	- `POST /api/v1/ai/assistant`
+		- `request_id`
+		- `user_text`
+		- `input_type`
+		- `context`
 - `POST /api/v1/ai/parse-only`
 	- `request_id`
 	- `user_text`
@@ -31,6 +38,12 @@ AI Assistant nhan natural language command tu user, goi LLM de parse thanh JSON 
 	- `context.current_state` (tuy chon)
 
 ### Output
+	- Assistant:
+		- `intent`
+		- `assistant_text`
+		- `parsed_commands`
+		- `execution_status`
+		- `resulting_state`
 - Parse-only:
 	- `parsed_command`
 	- `validation_result`
@@ -44,7 +57,8 @@ AI Assistant nhan natural language command tu user, goi LLM de parse thanh JSON 
 	- `trace_id`
 
 ## 5) API Interaction
-1. Dashboard goi `POST /api/v1/ai/parse-only` hoac `POST /api/v1/ai/parse-and-execute`.
+1. Dashboard goi `POST /api/v1/ai/assistant` cho Voice Chat mode.
+2. Dashboard goi `POST /api/v1/ai/parse-only` hoac `POST /api/v1/ai/parse-and-execute` cho Manual Command mode.
 2. Server goi LLM provider (OpenRouter) voi prompt rang buoc schema.
 3. Server validate JSON output.
 4. Neu hop le va la parse-and-execute:

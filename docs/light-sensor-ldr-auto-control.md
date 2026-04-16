@@ -18,7 +18,7 @@
   - `ldr:DO -> esp:D34`
 
 - Relay den theo LDR (relay3):
-  - `relay3:IN -> esp:D16`
+  - `relay3:IN -> esp:D23`
   - `relay3:COM -> esp:VIN`
   - `relay3:NO -> rLoad3 -> led3:A`
   - `led3:C -> esp:GND.1`
@@ -35,11 +35,12 @@
 ## Firmware impact
 - Them pin input cho LDR: `PIN_LDR_DO = 34`.
 - Them pin relay quat: `PIN_FAN_RELAY = 26`.
-- Auto logic anh sang theo tin hieu digital DO (dark=HIGH, bright=LOW).
-- Auto den LDR hien tai dieu khien `LIGHT1` (relay3 tren pin 16).
+- Auto logic anh sang theo tin hieu digital DO va co cau hinh cuc tinh bang `LDR_DARK_ACTIVE_HIGH` trong `src/main.cpp`.
+- Cau hinh hien tai: `LDR_DARK_ACTIVE_HIGH = false` (dark=LOW, bright=HIGH).
+- Auto den LDR hien tai dieu khien `LIGHT3` (relay3 tren pin 23).
 - Fan auto theo DHT:
   - Bat o `>= 35.0C`
-  - Tat o `<= 33.5C`
+  - Tat o `<= 35.0C`
 
 ## API impact
 - `GET /sensor` bo sung truong `ldr`:
@@ -66,3 +67,28 @@
 1. Neu dung quat 5V that, noi quat vao COM/NO cua relayFan nhu mo hinh.
 2. Nguon quat co the tach rieng, nhung bat buoc chung GND voi ESP32.
 3. Khong cap dong quat truc tiep tu chan GPIO ESP32.
+
+## Huong dan nap code vao ESP32
+1. Cam ESP32 vao may tinh bang cap USB data.
+2. Mo workspace va chon dung board `esp32dev` trong `platformio.ini`.
+3. Build firmware:
+
+```bash
+pio run
+```
+
+4. Nap firmware vao ESP32 (thay `COMx` bang cong that):
+
+```bash
+pio run -t upload --upload-port COMx
+```
+
+5. Mo serial monitor de theo doi trang thai LDR va relay3:
+
+```bash
+pio device monitor -b 115200 --port COMx
+```
+
+6. Kiem thu nhanh:
+  - Che LDR: relay3 dong, LED vang sang.
+  - Chieu sang vao LDR: relay3 ngat, LED vang tat.

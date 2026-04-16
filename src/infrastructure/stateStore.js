@@ -5,7 +5,8 @@ class StateStore {
       devices: {
         light: { living: "off", bedroom: "off" },
         lock: "close",
-        ac: { living: "off", bedroom: "off" }
+        ac: { living: "off", bedroom: "off" },
+        fan: "off"
       },
       sensor: {
         ldr: {},
@@ -26,6 +27,9 @@ class StateStore {
     if (command.device === "ac") {
       this.state.devices.ac[command.room] = command.action;
     }
+    if (command.device === "fan") {
+      this.state.devices.fan = command.action;
+    }
     this.state.last_sync_at = now;
     return this.getState();
   }
@@ -35,6 +39,11 @@ class StateStore {
       ...this.state.sensor,
       ...sensor
     };
+
+    if (sensor && typeof sensor.fan === "string") {
+      this.state.devices.fan = sensor.fan;
+    }
+
     this.state.last_sync_at = new Date().toISOString();
   }
 
