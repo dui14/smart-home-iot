@@ -28,5 +28,8 @@ npm start
 Server mac dinh chay tai `http://localhost:3000`.
 
 ## Mo hinh
-<img width="1920" height="2560" alt="smart-home" src="https://github.com/user-attachments/assets/63e83507-793d-4541-923c-1c707f806fb4" />
+<img width="1912" height="1390" alt="smart-home" src="https://github.com/user-attachments/assets/f68ed4fd-7c4a-45ac-b170-4bf21d74aa34" />
+
+## Giao dien
+<img width="971" height="559" alt="image" src="https://github.com/user-attachments/assets/a36f0172-d49a-424c-b11e-70ecfb4e1af4" />
 
