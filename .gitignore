@@ -53,10 +53,12 @@ wokwi/*.log
 .idea/
 .DS_Store
 Thumbs.db
-.github
+.github/copilot-instructions.md
 agents/*
 ai-context/*
 api/*
 docs/*
 spec/*
+svg/*
+
 
