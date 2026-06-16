@@ -81,7 +81,9 @@ This file defines the virtual circuit used by Wokwi, including:
 * LEDs, relays, and actuators
 * Pin connections and wiring
 
-After modifying `diagram.json`, reload the Wokwi project to apply the changes.
+<img width="527" height="410" alt="image" src="https://github.com/user-attachments/assets/7abe9770-b666-4102-8367-5ef48998bb6f" />
+
+> After modifying `diagram.json`, reload the Wokwi project to apply the changes.
 
 ---
 
