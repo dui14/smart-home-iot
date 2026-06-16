@@ -1,46 +1,64 @@
-# SETUP Database (Supabase)
+# Database Setup
 
-Tai lieu nay tap trung phan database de sau khi clone project, ban co the chay `npm start` ngay.
+This guide covers the minimum database configuration required to run the project after cloning the repository.
 
-## 1. Yeu cau
+## Prerequisites
 
-- Node.js 18 tro len
-- Tai khoan Supabase va 1 project database da tao
+* Node.js 18 or later
+* A PostgreSQL database
+* An existing PostgreSQL database
 
-## 2. Tao schema database
+## Create the Database Schema
 
-1. Mo Supabase SQL Editor.
-2. Copy toan bo noi dung trong `database/schema.sql` va chay 1 lan.
-3. Xac nhan da co 3 bang:
-   - `chat_sessions`
-   - `chat_messages`
-   - `command_executions`
+1. Open the **pgAdmin SQL Editor**.
+2. Copy the contents of [`schema.sql`](database/schema.sql)
+3. Execute the script once.
+4. Verify that the following tables have been created:
 
-## 3. Cau hinh bien moi truong
+* `chat_sessions`
+* `chat_messages`
+* `command_executions`
 
-Tao file `.env` tai thu muc goc voi gia tri toi thieu:
+## Configure Environment Variables
+
+Create a `.env` file in the project root:
 
 ```env
 PORT=3000
 DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<database>?sslmode=require
 DB_SSL=true
+
 ESP32_BASE_URL=http://127.0.0.1:8080
+
 AI_PROVIDER=openrouter
-OPENROUTER_API_KEY=your_openrouter_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-Neu ban dung Gemini:
+### Using Gemini
+
+If you want to use Gemini instead of OpenRouter:
 
 ```env
 AI_PROVIDER=gemini
-GEMINI_API_KEY=your_gemini_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-## 4. Chay ung dung
+If the database connection is successful, you should see a message similar to:
 
-```bash
-npm install
-npm start
+```text
+[DB] PostgreSQL connected ...
 ```
 
-Neu ket noi thanh cong, terminal se hien log co noi dung: `[DB] PostgreSQL connected ...`.
+## Verify the Setup
+
+After the server starts:
+
+1. Open the web application.
+2. Send a test command or chat message.
+3. Confirm that records are created in:
+
+   * `chat_sessions`
+   * `chat_messages`
+   * `command_executions`
+
+The application is now ready to communicate with the database and ESP32 devices.

@@ -1,35 +1,163 @@
 # Smart Home IoT
 
-Smart Home IoT la he thong dieu khien nha thong minh gom API Node.js, ESP32 va giao dien web. Du an cho phep nhan lenh dieu khien thiet bi, doc du lieu cam bien va luu lich su thao tac de theo doi theo thoi gian thuc.
+Smart Home IoT is a smart home automation project built with Node.js, ESP32, PostgreSQL, and a web dashboard. The system supports real-time device control, sensor monitoring, automation workflows, and AI-powered natural language commands.
 
-## Tinh nang chinh
+## Features
 
-- Dieu khien den, quat, khoa cua theo phong hoac theo ngu canh.
-- Ket noi ESP32 de dong bo trang thai thiet bi va du lieu cam bien.
-- Luu lich su chat va lich su command tren PostgreSQL (khuyen nghi Supabase).
-- Ho tro AI provider de xu ly lenh ngon ngu tu nhien.
+* Control lights, fans, air conditioners, and door locks.
+* Real-time synchronization between Web Dashboard, Server, and ESP32.
+* Monitor environmental data from sensors (DHT22, LDR, etc.).
+* Store chat history and command logs in PostgreSQL (Supabase recommended).
+* AI-powered command processing using natural language.
+* Support both Manual and Auto operation modes.
 
-## Chay nhanh
+## Quick Start
 
-1. Clone repository.
-2. Cai dependencies:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/dui14/smart-home-iot.git
+cd smart-home-iot
+```
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-3. Cau hinh database va bien moi truong theo huong dan tai [SETUP.md](SETUP.md).
-4. Chay server:
+### 3. Configure Environment Variables
+
+Follow the instructions in: [SETUP.md](SETUP.md)
+
+### 4. Start the Server
 
 ```bash
 npm start
 ```
 
-Server mac dinh chay tai `http://localhost:3000`.
+The API server runs by default at:
 
-## Mo hinh
-<img width="1912" height="1390" alt="smart-home" src="https://github.com/user-attachments/assets/f68ed4fd-7c4a-45ac-b170-4bf21d74aa34" />
+```text
+http://localhost:3000
+```
 
-## Giao dien
-<img width="971" height="559" alt="image" src="https://github.com/user-attachments/assets/a36f0172-d49a-424c-b11e-70ecfb4e1af4" />
+---
 
+## ESP32 Setup
+
+### Configure Wi-Fi Credentials
+
+Update the Wi-Fi settings in `platformio.ini` before uploading firmware:
+
+```ini
+build_flags =
+    -DWIFI_SSID_VALUE=\"YOUR_WIFI_SSID\"
+    -DWIFI_PASSWORD_VALUE=\"YOUR_WIFI_PASSWORD\"
+```
+
+Example:
+
+```ini
+build_flags =
+    -DWIFI_SSID_VALUE=\"MyHomeWiFi\"
+    -DWIFI_PASSWORD_VALUE=\"12345678\"
+```
+
+---
+
+## Circuit Configuration (Wokwi)
+
+The hardware layout can be customized by editing:
+
+```text
+diagram.json
+```
+
+This file defines the virtual circuit used by Wokwi, including:
+
+* ESP32 board configuration
+* Sensors (DHT22, LDR, etc.)
+* LEDs, relays, and actuators
+* Pin connections and wiring
+
+After modifying `diagram.json`, reload the Wokwi project to apply the changes.
+
+---
+
+## Firmware Upload
+
+### PlatformIO (Recommended)
+
+1. Install the PlatformIO IDE extension.
+2. Open the firmware project folder.
+3. Connect the ESP32 board via USB.
+4. Build and upload the firmware:
+
+```bash
+pio run --target upload
+```
+
+Or use the **Build** and **Upload** buttons from the PlatformIO toolbar.
+
+### Serial Monitor
+
+```bash
+pio device monitor
+```
+
+---
+
+### Arduino IDE
+
+If you prefer Arduino IDE, follow the official installation guide: [Arduino Documents](https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-downloading-and-installing)
+
+After installation:
+
+1. Open the ESP32 firmware project.
+2. Install ESP32 board support.
+3. Select the correct board and COM port.
+4. Upload the firmware.
+
+---
+
+## System Architecture
+
+<img width="1912" height="1390" alt="Smart Home Architecture" src="https://github.com/user-attachments/assets/f68ed4fd-7c4a-45ac-b170-4bf21d74aa34" />
+
+---
+
+## Dashboard
+
+<img width="971" height="559" alt="Dashboard" src="https://github.com/user-attachments/assets/a36f0172-d49a-424c-b11e-70ecfb4e1af4" />
+
+---
+
+## Workflows
+
+* [AI Command Workflow](./workflow/ai-command-flow.md#flow-diagram)
+* [System Overview](./workflow/system-overview.md#system-overview)
+* [Mode Switching Flow](./workflow/system-overview.md#mode-switch-diagram)
+
+---
+
+## Project Structure
+
+```text
+.
+├── src/                 # Node.js API source
+├── workflow/            # System workflow documentation
+├── diagram.json         # Wokwi circuit configuration
+├── platformio.ini       # PlatformIO configuration
+└── SETUP.md             # Environment setup guide
+```
+
+## Tech Stack
+
+* Node.js
+* PostgreSQL / Supabase
+* Redis
+* ESP32
+* PlatformIO
+* Wokwi
+* LLM API (OpenAI / Gemini)

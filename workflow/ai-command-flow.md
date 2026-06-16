@@ -1,51 +1,61 @@
 # AI Command Workflow
 
-## 1) AI control flow (User -> LLM -> ESP32)
+## 1. AI Control Flow (User → LLM → ESP32)
 
-### Step-by-step
-1. User nhap cau lenh tu nhien tren Web
-2. Web goi `POST /api/v1/ai-command`
-3. Server tao prompt co context hien tai (mode, device state, room)
-4. Server goi LLM de parse command
-5. Server validate command parse ra:
-   - dung schema
-   - dung device/action
-   - khong vi pham rule auto/manual
-6. Server map command thanh endpoint ESP32 tuong ung
-7. Server goi ESP32 va nhan ket qua
-8. Server tra ket qua tong hop ve Web
+### Process
 
-### So do nhanh
+1. User submits a natural language command from the Web UI.
+2. Web calls `POST /api/v1/ai-command`.
+3. Server builds a prompt using the current context (mode, device state, room).
+4. Server sends the prompt to the LLM for intent parsing.
+5. Server validates the parsed command:
+
+   * Matches the required schema
+   * Uses valid devices and actions
+   * Complies with auto/manual mode rules
+6. Server maps the command to the corresponding ESP32 endpoint.
+7. Server executes the command on ESP32.
+8. Server returns the final result to the Web UI.
+
+### Flow Diagram
 
 ```mermaid
 sequenceDiagram
-	participant U as User
-	participant W as Web
-	participant S as Server
-	participant L as LLM
-	participant E as ESP32
-	U->>W: Natural language command
-	W->>S: POST /ai-command
-	S->>L: Parse intent
-	L-->>S: Structured command
-	S->>S: Validate policy and mode
-	S->>E: Execute device command
-	E-->>S: Device result
-	S-->>W: Final response
+    participant U as User
+    participant W as Web
+    participant S as Server
+    participant L as LLM
+    participant E as ESP32
+
+    U->>W: Natural language command
+    W->>S: POST /ai-command
+    S->>L: Parse intent
+    L-->>S: Structured command
+    S->>S: Validate policy and mode
+    S->>E: Execute device command
+    E-->>S: Device result
+    S-->>W: Final response
 ```
 
-## 2) Loi va fallback
-1. LLM timeout -> retry 1 lan
-2. LLM parse sai schema -> tra `ERR_AI_PARSE_FAILED`
-3. ESP32 timeout -> retry toi da 2 lan
-4. Van that bai -> tra huong dan user dung `POST /control` thu cong
+## 2. Error Handling & Fallback
 
-## 3) Timeout strategy trong AI flow
-1. Web -> Server: 8s
-2. Server -> LLM: 4s, retry 1 lan
-3. Server -> ESP32: 1.5s, retry 2 lan
+* LLM timeout → Retry once.
+* Invalid LLM output schema → Return `ERR_AI_PARSE_FAILED`.
+* ESP32 timeout → Retry up to 2 times.
+* If execution still fails → Suggest using `POST /control` manually.
 
-## 4) Dieu kien xac nhan user
-1. Lenh mo ho phong/thiet bi can hoi lai
-2. Lenh lock open trong mode auto yeu cau xac nhan
-3. Lenh confidence thap hon nguong can xac nhan truoc khi execute
+## 3. Timeout Strategy
+
+| Request Path   | Timeout | Retry |
+| -------------- | ------- | ----- |
+| Web → Server   | 8s      | None  |
+| Server → LLM   | 4s      | 1     |
+| Server → ESP32 | 1.5s    | 2     |
+
+## 4. User Confirmation Rules
+
+Confirmation is required when:
+
+1. The command is ambiguous and the target room/device is unclear.
+2. A lock/unlock action conflicts with the current automation mode.
+3. The LLM confidence score is below the configured threshold.
