@@ -2,6 +2,8 @@
 
 Smart Home IoT is a smart home automation project built with Node.js, ESP32, PostgreSQL, and a web dashboard. The system supports real-time device control, sensor monitoring, automation workflows, and AI-powered natural language commands.
 
+<img width="1280" height="720" alt="Smart Home Architecture" src="https://github.com/user-attachments/assets/f68ed4fd-7c4a-45ac-b170-4bf21d74aa34" />
+
 ## Features
 
 * Control lights, fans, air conditioners, and door locks.
@@ -120,12 +122,6 @@ After installation:
 2. Install ESP32 board support.
 3. Select the correct board and COM port.
 4. Upload the firmware.
-
----
-
-## System Architecture
-
-<img width="1912" height="1390" alt="Smart Home Architecture" src="https://github.com/user-attachments/assets/f68ed4fd-7c4a-45ac-b170-4bf21d74aa34" />
 
 ---
 
